@@ -17,12 +17,30 @@
 (function () {
     "use strict";
 
+    var fs = require('fs');
+    var xml2js = require('xml2js');
+    var convert2xml = require('data2xml')({attrProp:'$'});
+
+    var policyFiles = [
+        "/home/peter/.webinos/policies/policy.xml"
+    ];
+
     function getPolicy(id, successCB, errorCB) {
-        successCB({'id':id});
+        console.log(id);
+        console.log(policyFiles[id]);
+        
+        var xmlParser = new xml2js.Parser(xml2js.defaults['0.2']);
+        var xmlPolicy = fs.readFileSync(policyFiles[id]);
+        xmlParser.parseString(xmlPolicy, function(err, data) {
+            console.log( data['policy-set'] );
+            successCB( data['policy-set'] );
+        });
     }
 
     function setPolicy(id, policy, successCB, errorCB) {
-        successCB({'id':id, 'policy':policy});
+        var data = convert2xml('policy-set', policy);
+        fs.writeFileSync(policyFiles[id], data);
+        successCB(data);
     }
 
     exports.getPolicy = getPolicy;
