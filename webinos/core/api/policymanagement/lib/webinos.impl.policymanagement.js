@@ -20,9 +20,13 @@
     var fs = require('fs');
     var xml2js = require('xml2js');
     var convert2xml = require('data2xml')({attrProp:'$'});
+    var path = require('path');
+
+    var dependencies = require("find-dependencies")(__dirname);
+    var webinosPath = dependencies.global.require(dependencies.global.pzp.location).getWebinosPath();
 
     var policyFiles = [
-        "/home/peter/.webinos/policies/policy.xml"
+        path.join(webinosPath, "policies/policy.xml")
     ];
 
     function getPolicy(id, successCB, errorCB) {
