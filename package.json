@@ -3,8 +3,8 @@
 ,   "publishConfig": { "tag": "alpha" }
 ,   "description": "Policy Management API"
 ,   "keywords": [ "webinos", "policy", "management", "API"]
-,   "version": "0.7.1"
-,   "homepage": "http://webinos.org/"
+,   "version": "0.0.1"
+,   "homepage": "http://developer.webinos.org/"
 ,   "bugs" : "http://jira.webinos.org"
 ,   "contributors": [
         "Giuseppe La Torre <giuseppe.latorre@dieei.unict.it>"
@@ -19,9 +19,17 @@
         , "url": ""
     }
 ,   "directories": {
-        "lib": "./lib"
+        "doc": "./doc"
+    ,   "lib": "./lib"
+    ,   "test": "./test"
     }
 ,   "main": "./lib/webinos.rpc.policymanagement.js"
-,   "dependencies": {}
-,   "bundleDependencies":[]
+,   "dependencies": {
+        "xml2js": "0.x.x"
+    ,   "data2xml": "0.8.x"
+    }
+,   "bundleDependencies":[
+        "fs"
+    ,   "path"
+    ]
 }
