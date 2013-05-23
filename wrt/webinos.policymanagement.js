@@ -704,8 +704,7 @@
     };
 
     function save(policyset, successCB, errorCB) {
-        var policy2save = policyFiles[policyset.getFileId()].content;
-        var rpc = webinos.rpcHandler.createRPC(this, "setPolicy", [policyset.getBaseFile(), policy2save]);
+        var rpc = webinos.rpcHandler.createRPC(this, "setPolicy", [policyset.getBaseFile(), policyset.toJSONString()]);
         webinos.rpcHandler.executeRPC(rpc
             , function (params) {
                 successCB(params);
