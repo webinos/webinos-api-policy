@@ -1,0 +1,68 @@
+
+<html>
+<script>
+
+var condition = 
+    {
+        "$":{"id":"cond3", "combine":"or"},
+        "resource-match":[
+            {"$":{"attr":"api-feature", "match":"minnie"}},
+            {"$":{"attr":"api-feature", "match":"topolino"}}
+        ]
+    };
+
+var condition2 = 
+    {
+        "$":{"id":"cond3", "combine":"and"},
+        "resource-match":[
+            {"$":{"attr":"api-feature", "match":"nonno"}},
+            {"$":{"attr":"api-feature", "match":"nanni"}}
+        ]
+    };
+
+
+var policyeditor;
+
+function start(){
+    //alert(webinos);
+    webinos.discovery.findServices(new ServiceType('http://webinos.org/core/policymanagement'), 
+        {onFound: function (service){ 
+            //alert(1);
+            policyeditor =  service;
+            policyeditor.bindService({onBind: function (service) {
+                //alert(2);
+                var ps = policyeditor.getPolicySet(0, function(ps){
+                    //alert(3);
+                    
+                    alert("Test1: get a policy, add a rule, update the rule")
+                    var pol = ps.getPolicy("p2");
+                    alert("Policy : "+pol.toJSONString());
+                    pol.addRule("rule 3", "permit", condition2);
+                    alert(ps.toJSONString());
+                    pol.updateRule("rule 3","deny", condition);
+                    alert(ps.toJSONString());  
+
+                    //TEST2                  
+                    alert("Test2 : add two policies with same id");
+                    var p10 = ps.createPolicy("same_id","permit-overrides","descr p10");
+                    ps.addPolicy(p10);
+                    alert(ps.toJSONString());
+                    var p11 = ps.createPolicy("same_id","permit-overrides","descr p11");
+                    ps.addPolicy(p11);
+                    alert(ps.toJSONString());
+
+
+                }, null);
+            }});
+        }
+    });
+}
+
+
+
+</script>
+
+<body>
+ <button onClick="start()">Start</button>
+ </body>   
+</html>
