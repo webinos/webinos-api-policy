@@ -59,7 +59,7 @@
             return _ps;
         };
 
-        this.updateRule = function(ruleId, updatedCondition){
+        this.updateRule = function(ruleId, effect, updatedCondition){
             if(!_ps) {
                 return null;
             }
@@ -81,15 +81,21 @@
             }
 
             if(rule){
+                if(effect)
+                    rule['$']["effect"] = effect;
+
                 if(!rule.condition){
                     console.log("No condition");
+                    rule["condition"] = new Array();
                     rule["condition"][0] = updatedCondition;
                 }
                 else{
-
+                    
                     //check first child
                     var parent = rule["condition"];
+                    
                     var tmp = parent[0];
+
                     if(tmp['$']["id"] == updatedCondition['$']["id"]){
                         parent[0] = updatedCondition;
                         return;
@@ -352,9 +358,11 @@
         function getPolicyById(policySet, policyId) {
             //TODO: if the attribute id of the policy/policy-set is not defined, the function will crash
             //console.log('getPolicyById - policySet is '+JSON.stringify(policySet));
-            if(policyId == null || policySet['$']['id'] == policyId) {
+            /*
+            if(policyId == null || (policySet['$']['id'] && policySet['$']['id'] == policyId)) {
                 return policySet;
             }
+            */
             if(policySet['policy']) {
                 for(var j in policySet['policy']) {
                     if(policySet['policy'][j]['$']['id'] == policyId) {
@@ -468,29 +476,37 @@
             return _ps;
         };
 
-        //this.createPolicy = function(policyId, combine, description){
-        function createPolicy(policyId, combine, description){
+        this.createPolicy = function(policyId, combine, description){
+//        function createPolicy(policyId, combine, description){
             return new policy(null, policyId, combine, description);
         };
 
-        //this.createPolicySet = function(policySetId, combine, description){
-        function createPolicySet(policySetId, combine, description){
+        this.createPolicySet = function(policySetId, combine, description){
+//       function createPolicySet(policySetId, combine, description){
             return new policyset(null, policySetId, _basefile, _fileId, policySetId, combine, description);
         };
 
 
-//      this.addPolicy = function(newPolicy, newPolicyPosition){
-        this.addPolicy = function(policyId, combine, description, newPolicyPosition, succCB){
-            var newPolicy = createPolicy(policyId, combine, description);
+      this.addPolicy = function(newPolicy, newPolicyPosition){
+//      this.addPolicy = function(policyId, combine, description, newPolicyPosition, succCB){
+//      var newPolicy = createPolicy(policyId, combine, description);
             if(!_ps) 
                 return null;
             
             if(!_ps["policy"])
                 _ps["policy"] = new Array();
-
+            else{
+                for(var i =0; i<_ps["policy"].length; i++){
+                    console.log(JSON.stringify(newPolicy.getInternalPolicy()));
+                    if(_ps["policy"][i]['$']["id"] == newPolicy.getInternalPolicy()['$']["id"]){
+                        console.log("A policy with " + newPolicy.getInternalPolicy()['$']["id"] + " is already present");
+                        return;
+                    }
+                }
+            }
             var position = (newPolicyPosition == undefined || newPolicyPosition<0 || _ps["policy"].length == 0) ? _ps["policy"].length : newPolicyPosition;
             _ps['policy'].splice(position, 0, newPolicy.getInternalPolicy());
-            succCB(newPolicy);
+            //succCB(newPolicy);
             
         };
 
@@ -544,29 +560,33 @@
 
         };
 
-        this.getPolicy = function(policyId, succCB, errCB){
+        //this.getPolicy = function(policyId, succCB, errCB){
+        this.getPolicy = function(policyId){
+            //console.log(_ps);
             if(policyId){
                 var tmp = getPolicyById(_ps, policyId);
                 if(tmp){
-                    //return new policy(tmp);
-                    succCB(new Policy(tmp));
+                    return new policy(tmp);
+                    //succCB(new policy(tmp));
                     return;
                 }
             }
-            errCB();
+            //errCB();
         };
 
-        this.getPolicySet = function(policySetId, succCB, errCB){
+        //this.getPolicySet = function(policySetId, succCB, errCB){
+        this.getPolicySet = function(policySetId){
             if(policySetId){
                 var tmp = getPolicySetById(_ps, policySetId);
                 if(tmp){
-                    //return new policyset(tmp, "policy-set", _basefile, _fileId);
-                    succCB(new policyset(tmp, "policy-set", _basefile, _fileId));
+                    return new policyset(tmp, "policy-set", _basefile, _fileId);
+                    //succCB(new policyset(tmp, "policy-set", _basefile, _fileId));
                 }
             }
-            errCB();
+            //errCB();
         };
 
+/*
         this.getSubjects = function(policyId){
             if(!_ps) {
                 return null;
@@ -581,7 +601,7 @@
 
             return subjects;
         };
-
+*/
 
         this.updateSubject = function(subjectId, matches, policyId){
             if(!_ps) {
