@@ -59,7 +59,8 @@
             return _ps;
         };
 
-        this.updateRule = function(ruleId, effect, updatedCondition){
+        //this.updateRule = function(ruleId, effect, updatedCondition){
+        this.updateRule = function(ruleId, key, value){
             if(!_ps) {
                 return null;
             }
@@ -81,14 +82,68 @@
             }
 
             if(rule){
-                if(effect)
-                    rule['$']["effect"] = effect;
 
-                if(!rule.condition){
+
+                if(key == "effect"){
+                    if(value)
+                        rule['$']["effect"] = value;
+                    else
+                        rule['$']["effect"] = "permit";
+                }
+                else if(key == "condition"){
+
+                    if(value){
+                        if(rule.condition){
+                            //check first child
+                            var parent = rule["condition"];
+                            
+                            var tmp = parent[0];
+                            console.log(JSON.stringify(rule["condition"]));
+                            if(tmp['$']["id"] == value['$']["id"]){
+                                parent[0] = value;
+                                return;
+                            }
+
+                            //check other children
+                            while(true){
+                                if(tmp.condition && value){
+
+                                    if(tmp.condition[0]['$']["id"] == value['$']["id"]){
+                                        tmp.condition[0] = value;
+                                        return;
+                                    }
+                                    else
+                                        tmp = tmp.condition;
+                                }
+                                else
+                                    break;
+                            }
+                        }
+                        else{
+                            rule["condition"] = [value];
+                        }
+                    }
+                    else{
+                        if(rule.condition){
+                            rule.condition = undefined;
+                        }
+                        else
+                        {
+                            ;
+                        }
+                    }
+                }
+/*
+                if(!updatedCondition)
+                    if(rule["condition"])
+                        rule["condition"] = undefined;
+
+                else if(!rule.condition){
                     console.log("No condition");
                     rule["condition"] = new Array();
                     rule["condition"][0] = updatedCondition;
                 }
+
                 else{
                     
                     //check first child
@@ -103,7 +158,7 @@
 
                     //check other children
                     while(true){
-                        if(tmp.condition){
+                        if(tmp.condition && updatedCondition){
                             if(tmp.condition[0]['$']["id"] == updatedCondition['$']["id"]){
                                 tmp.condition[0] = updatedCondition;
                                 return;
@@ -114,7 +169,7 @@
                         else
                             break;
                     }
-                }
+                }*/
             }
         }
 
@@ -189,16 +244,21 @@
             //console.log("PRE : " + JSON.stringify(policy["rule"]));
             if(policy["rule"]){
                 var index = -1;
+                var count = 0;
+
                 for(var i in policy["rule"]){
                     if(policy["rule"][i]["$"]["id"] && policy["rule"][i]["$"]["id"] == ruleId){
                         index = i;
-                        break;
+                        //break;
                     }
+                    count ++;
                 }
                 if(index != -1){
                     console.log("Removing rule " + index);
                     policy["rule"].splice(index,1);
                 }
+                if(count == 1)
+                    policy["rule"] = undefined;    
                 
             }
             else
@@ -282,7 +342,8 @@
                     policy.target[0]["subject"].splice(index,1);
                 }
                 if(count == 1)
-                policy.target = [];
+                    //policy.target = [];
+                    policy.target = undefined;
             }
             //console.log("AFTER : " + JSON.stringify(policy["rule"]));
         };
@@ -678,7 +739,8 @@
                     policy.target[0]["subject"].splice(index,1);
                 }
                 if(count == 1)
-                policy.target = [];
+                    //policy.target = [];
+                    policy.target = undefined;
             }
             //console.log("AFTER : " + JSON.stringify(policy["rule"]));
         };
