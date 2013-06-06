@@ -2,6 +2,14 @@
 <html>
 <script>
 
+var matches = {
+    "subject-match" : 
+        [   {"$" : {"attr" : "api-feature", "match" : "http://webinos.org/api/nfc"}} 
+            ,
+            {"$" : {"attr" : "api-feature", "match" : "http://webinos.org/api/sensor"}}
+        ]
+ };
+
 var condition = 
     {
         "$":{"id":"cond3", "combine":"or"},
@@ -33,7 +41,7 @@ function start(){
                 //alert(2);
                 var ps = policyeditor.getPolicySet(0, function(ps){
                     //alert(3);
-                    
+                    /*
                     alert("Test1: get a policy, add a rule, update the rule")
                     var pol = ps.getPolicy("p2");
                     alert("Policy : "+pol.toJSONString());
@@ -41,8 +49,10 @@ function start(){
                     alert(ps.toJSONString());
                     pol.updateRule("rule 3","deny", condition);
                     alert(ps.toJSONString());  
+                    */
 
                     //TEST2                  
+                    /*
                     alert("Test2 : add two policies with same id");
                     var p10 = ps.createPolicy("same_id","permit-overrides","descr p10");
                     ps.addPolicy(p10);
@@ -50,6 +60,45 @@ function start(){
                     var p11 = ps.createPolicy("same_id","permit-overrides","descr p11");
                     ps.addPolicy(p11);
                     alert(ps.toJSONString());
+                    */
+
+                    //TEST3
+                    /*
+                    alert("Test3 : getPolicy, add subject, remove subject and add subject");
+                    pol = ps.getPolicy("p2");
+                    alert(pol.toJSONString());
+                    pol.addSubject("sub1", matches);
+                    alert(pol.toJSONString());
+                    pol.removeSubject("sub1");
+                    alert(pol.toJSONString());
+                    pol.addSubject("sub1", matches);
+                    alert(pol.toJSONString());
+                    */
+                    /*
+                    pol = ps.getPolicy("p2");
+                    pol.addRule("rule 3", "permit", condition2);
+                    alert(pol.toJSONString());
+                    pol.addRule("rule 4", "deny", condition);
+                    alert(pol.toJSONString());
+                    pol.removeRule("rule 3");
+                    alert(pol.toJSONString());
+                    pol.removeRule("rule 4");
+                    alert(pol.toJSONString());
+                    pol.addRule("rule 4", "deny", condition);
+                    alert(pol.toJSONString());
+                    */
+
+                    pol = ps.getPolicy("p2");
+                    pol.addRule("rule 3", "permit");
+                    alert(pol.toJSONString());
+                    pol.updateRule("rule 3", "effect", "permit-overrides");
+                    alert(pol.toJSONString());
+                    pol.updateRule("rule 3", "condition", condition);
+                    alert(pol.toJSONString());
+                    pol.updateRule("rule 3", "condition", condition2);
+                    alert(pol.toJSONString());
+                    pol.updateRule("rule 3", "condition");
+                    alert(pol.toJSONString());
 
 
                 }, null);
