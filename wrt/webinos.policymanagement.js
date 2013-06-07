@@ -291,6 +291,12 @@
                 policy.target[0]["subject"] = [];
 
             //console.log(JSON.stringify(policy.target[0]));
+            for(var i =0; i<policy.target[0]["subject"].length; i++){
+                    if(policy.target[0]["subject"][i]['$']["id"] == newSubjectId){
+                        console.log("A subject with " + newSubjectId + " is already present");
+                        return;
+                    }
+                } 
             policy.target[0]["subject"].push(newsubj);
             //console.log(JSON.stringify(policy.target[0]));
 
@@ -542,8 +548,8 @@
             return new policy(null, policyId, combine, description);
         };
 
-        this.createPolicySet = function(policySetId, combine, description){
-//       function createPolicySet(policySetId, combine, description){
+        //this.createPolicySet = function(policySetId, combine, description){
+       function createPolicySet(policySetId, combine, description){
             return new policyset(null, policySetId, _basefile, _fileId, policySetId, combine, description);
         };
 
@@ -584,7 +590,6 @@
 //            var position = (!newPolicySetPosition || _ps["policy-set"].length == 0) ? 0 : newPolicySetPosition;
 
             _ps['policy-set'].splice(position, 0, newPolicySet.getInternalPolicySet());
-            
         };
 
         
@@ -602,7 +607,7 @@
                 return null;
             }
            
-            var id = (newSubjectId) ? newSubjectId : new Date().getTime();
+            var id = (newSubjectId) ? newSubjectId : new Date().getTime(); //Ecco perchè inserendo ID vuoto metto la data
             var newsubj = {"$" : {"id" : id} , "subject-match" : [] };
         
             for(var i in matches){
@@ -614,8 +619,14 @@
 
             if(!policy.target[0]["subject"])
                 policy.target[0]["subject"] = [];
-
+                
             //console.log(JSON.stringify(policy.target[0]));
+            for(var i =0; i<policy.target[0]["subject"].length; i++){
+                    if(policy.target[0]["subject"][i]['$']["id"] == newSubjectId){
+                        console.log("A subject with " + newSubjectId + " is already present");
+                        return;
+                    }
+                }    
             policy.target[0]["subject"].push(newsubj);
             //console.log(JSON.stringify(policy.target[0]));
 
@@ -664,7 +675,7 @@
         };
 */
 
-        this.updateSubject = function(subjectId, matches, policyId){
+        this.updateSubject = function(subjectId, matches/*, policyId*/ ){
             if(!_ps) {
                 return null;
             }
@@ -745,14 +756,19 @@
             //console.log("AFTER : " + JSON.stringify(policy["rule"]));
         };
 
-        this.updateAttributes = function(policySetId, combine, description){
+        this.updateAttributes = function(key, value){
+          if(key == "combine" || key == "description"){
+            _ps['$'][key] = value;
+          }
+        };
+        /*function(policySetId, combine, description){
             if(policySetId)
                 _ps['$']["id"] = policySetId;
             if(combine)
                 _ps['$']["combine"] = combine;
             if(description)
-                _ps['$']["description"] = description;
-        };
+                _ps['$']["description"] = description;};*/
+        
 
         this.toJSONString = function(){
             return JSON.stringify(_ps);
