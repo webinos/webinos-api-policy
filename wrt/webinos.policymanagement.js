@@ -256,9 +256,10 @@
                 if(index != -1){
                     console.log("Removing rule " + index);
                     policy["rule"].splice(index,1);
+                    if(count == 1)
+                        policy["rule"] = undefined; 
                 }
-                if(count == 1)
-                    policy["rule"] = undefined;    
+                   
                 
             }
             else
@@ -301,7 +302,7 @@
             //console.log(JSON.stringify(policy.target[0]));
 
         };
-
+/*
         this.getSubjects = function(policyId){
             if(!_ps) {
                 return null;
@@ -315,7 +316,7 @@
             var subjects = policy.target[0]["subject"];
 
             return subjects;
-        };
+        };*/
 
         this.removeSubject = function(subjectId) {
             if(!_ps) {
@@ -374,13 +375,17 @@
             }
         };
 
-        this.updateAttributes = function(policyId, combine, description){
-            if(policyId)
-                _ps['$']["id"] = policyId;
-            if(combine)
-                _ps['$']["combine"] = combine;
-            if(description)
-                _ps['$']["description"] = description;
+        this.updateAttributes = function(key, value){
+            if (!key) {
+                return;
+            }
+            if (key == "combine") {
+                _ps['$']["combine"] = value;
+            }
+            else if (key == "description") {
+                _ps['$']["description"] = value;
+            }
+                
         };
 
         this.toJSONString = function(){
@@ -507,9 +512,9 @@
                         policySet['policy-set'].splice(j, 1);
                         return true;
                     }
-                    if(removePolicyById(policySet['policy-set'][j], policyId)) {
+                    /*if(removePolicyById(policySet['policy-set'][j], policyId)) {
                         return true;
-                    }
+                    }*/
                 }
             }
             return false;
@@ -548,8 +553,8 @@
             return new policy(null, policyId, combine, description);
         };
 
-        //this.createPolicySet = function(policySetId, combine, description){
-       function createPolicySet(policySetId, combine, description){
+        this.createPolicySet = function(policySetId, combine, description){
+       //function createPolicySet(policySetId, combine, description){
             return new policyset(null, policySetId, _basefile, _fileId, policySetId, combine, description);
         };
 
@@ -577,9 +582,26 @@
             
         };
 
-        //this.addPolicySet = function(newPolicySet, newPolicySetPosition){
-        this.addPolicySet = function(policySetId, combine, description, newPolicySetPosition){
-            var newPolicySet = createPolicySet(policySetId, combine, description);
+        this.addPolicySet = function(newPolicySet, newPolicySetPosition){
+        //this.addPolicySet = function(policySetId, combine, description, newPolicySetPosition){
+            //var newPolicySet = createPolicySet(policySetId, combine, description);
+            if(!_ps) 
+                return null;
+            
+            if(!_ps['policy-set'])
+                _ps['policy-set'] = new Array();
+            else{
+                for(var i =0; i<_ps['policy-set'].length; i++){
+                    console.log(JSON.stringify(newPolicySet.getInternalPolicySet()));
+                    if(_ps['policy-set'][i]['$']['id'] == newPolicySet.getInternalPolicySet()['$']['id']){
+                        console.log("A policyset with " + newPolicySet.getInternalPolicySet()['$']['id'] + " is already present");
+                        return;
+                    }
+                }
+            }
+            var position = (newPolicySetPosition == undefined || newPolicySetPosition<0 || _ps['policy-set'].length == 0) ? _ps['policy-set'].length : newPolicySetPosition;
+            _ps['policy-set'].splice(position, 0, newPolicySet.getInternalPolicySet());
+            /*
             if(!_ps) 
                 return null;
             
@@ -590,6 +612,7 @@
 //            var position = (!newPolicySetPosition || _ps["policy-set"].length == 0) ? 0 : newPolicySetPosition;
 
             _ps['policy-set'].splice(position, 0, newPolicySet.getInternalPolicySet());
+            */
         };
 
         
@@ -674,8 +697,8 @@
             return subjects;
         };
 */
-
-        this.updateSubject = function(subjectId, matches/*, policyId*/ ){
+        this.updateSubject = function(subjectId, matches){
+        //this.updateSubject = function(subjectId, matches/*, policyId*/ ){
             if(!_ps) {
                 return null;
             }
@@ -704,7 +727,13 @@
             if(policyId == null) {
                 return;
             }
+            if (!_ps['policy']) {
+                return null;
+            }
             removePolicyById(_ps, policyId);
+            if (_ps['policy'].length == 0) {
+                _ps['policy'] = undefined;                
+            }
         };
 
         this.removePolicySet = function(policySetId){
@@ -714,7 +743,22 @@
             if(policySetId == null) {
                 return;
             }
+            if (!_ps['policy-set']) {
+                return null;
+            }
             removePolicySetById(_ps, policySetId);
+            console.log(_ps['policy-set']);
+            var count = 0;
+            for(var j in _ps['policy-set']) {
+                count++;
+            }
+            console.log("Count = "+count);
+            if (count == 0) {
+                _ps['policy-set'] = undefined;
+            }
+            //if (_ps['policy_set'].length == 0) {
+            //    _ps['policy-set'] = undefined;
+            //}   
         };
 
         
@@ -748,10 +792,10 @@
                 if(index != -1){
                     console.log("remove "+index);
                     policy.target[0]["subject"].splice(index,1);
+                    if(count == 1)
+                        policy.target = undefined;
                 }
-                if(count == 1)
-                    //policy.target = [];
-                    policy.target = undefined;
+                
             }
             //console.log("AFTER : " + JSON.stringify(policy["rule"]));
         };
