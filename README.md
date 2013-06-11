@@ -5,8 +5,8 @@ webinos-api-policy
 
 This implementation contains the following asynchronous methods:
 
-* **[getPolicySet](#getPolicySet_ref) **(policysetId, successCB, errorCB)
-* **[save](#save_ref) **(policyset, successCB, errorCB)
+* **[getPolicySet](#getPolicySet_ref)** (policysetId, successCB, errorCB)
+* **[save](#save_ref)** (policyset, successCB, errorCB)
 
 getPolicySets returns through the successCB an object of type policyset which is described below:
 
