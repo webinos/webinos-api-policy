@@ -27,6 +27,7 @@
         this.policy = policy;
         this.policyset = policyset;
         this.getPolicySet = getPolicySet;
+        this.testPolicy = testPolicy;
         this.save = save;
 
         if (typeof bindCB.onBind === 'function') {
@@ -848,4 +849,15 @@
         );
     };
 
+    function testPolicy(policyset, request, successCB, errorCB) {
+        var rpc = webinos.rpcHandler.createRPC(this, "testPolicy", [policyset.getBaseFile(), JSON.stringify(request)]);
+        webinos.rpcHandler.executeRPC(rpc
+            , function (params) {
+                successCB(params);
+            }
+            , function (error) {
+                errorCB(error);
+            }
+        );
+    };
 })();
