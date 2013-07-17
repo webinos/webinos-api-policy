@@ -1,0 +1,505 @@
+#tabTo-appsPolicies, #tabTo-placesPolicies {
+	display: none;
+}
+
+/* QUICK SETTINGS */
+
+#localQuickSettings, #remoteQuickSettings {
+	position: relative;
+}
+
+.localQuickSettings-title, .remoteQuickSettings-title {
+	color: #0084FF;
+	width: 100%;
+	border-bottom: 4px solid #EEE;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+#remoteQuickSettings {
+	position: relative;
+	margin-top: 2em;
+}
+.qstatus-name {
+	padding-right: 40px;
+	position: absolute;
+}
+.qstatus-icon {
+	width: 30px;
+	height: 12px;
+	margin: 0 0 0.8em auto;
+	background: #555; /* for possible future use of unknown status */
+	border: 2px solid #333;
+}
+.qstatus-icon.active {
+	background: #0084ff;
+	border: 2px solid #0064EE;
+}
+.qstatus-icon.inactive {
+	background: #555;
+	border: 2px solid #333;
+}
+
+/*@-webkit-keyframes status-icon-active-blink {
+	50% { background: #009EFF; }
+}
+.qstatus-icon.active {
+	-webkit-animation: status-icon-active-blink .4s step-end infinite alternate;
+}*/
+
+
+/* http://proto.io/freebies/onoff/ - modified & expanded */
+.onoffswitch {
+position: relative; width: 70px;
+-webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+margin-right: 0; margin-left: auto;
+}
+.onoffswitch-checkbox {
+display: none;
+}
+.onoffswitch-label {
+display: block; overflow: hidden; cursor: pointer;
+border: 1px solid #212121;
+border-radius: 5px;
+}
+.onoffswitch-inner {
+width: 200%; margin-left: -100%;
+-moz-transition: margin 0.2s ease-in 0s; -webkit-transition: margin 0.2s ease-in 0s;
+-o-transition: margin 0.2s ease-in 0s; transition: margin 0.2s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+float: left; width: 50%; height: 20px; padding: 0; line-height: 20px;
+font-size: 16px; color: white;
+-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+content: "ON";
+padding-left: 5px;
+background-color: #0084FF; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+content: "OFF";
+padding-right: 5px;
+background-color: #7F7F7F; color: #333333;
+text-align: right;
+}
+.onoffswitch-switch {
+width: 20px; margin: 0px;
+background: #555 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAYAAABmBXS+AAAAGklEQVQYlWNgYGBgUFJS+s8ABbjYo4qopAgAGAEp12JkKTMAAAAASUVORK5CYII=') 50% 50% no-repeat;
+border: 2px solid #444;
+position: absolute; top: 0; bottom: 0; right: 46px;
+-moz-transition: all 0.2s ease-in 0s; -webkit-transition: all 0.2s ease-in 0s;
+-o-transition: all 0.2s ease-in 0s; transition: all 0.2s ease-in 0s;
+border-radius: 5px;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+right: 0px;
+}
+.onoffswitch-checkbox:disabled + .onoffswitch-label .onoffswitch-inner:after {
+background-color: #bbb; color: #888;
+}
+.onoffswitch-checkbox:disabled + .onoffswitch-label {
+cursor: default; border-color: #777;
+}
+.onoffswitch-checkbox:disabled + .onoffswitch-label .onoffswitch-switch {
+cursor: default;
+background: #aaa;
+border-color: #999;
+}
+.onoffswitch-namelabel {
+position: absolute;
+line-height: 22px;
+padding-right: 80px;
+}
+.onoffswitch-namelabel, .onoffswitch {
+margin-bottom: 0.8em;
+}
+.onoffswitch-namelabel.disabled {
+color: #bbb;
+}
+
+/* PLACES */
+
+.places-titles, .apps-list {
+	/*border-bottom: 4px solid #EEE;
+	margin-bottom: 10px;
+	padding-bottom: 10px;*/
+	overflow: hidden;
+	margin-top: 1em;
+}
+.places-allow-title, .places-deny-title, .places-prompt-title,
+.apps-allow-title, .apps-deny-title, .apps-prompt-title {
+	float: left;
+	margin-left: 1%;
+}
+
+#places-allow, #places-deny, #places-prompt,
+#apps-allow, #apps-deny, #apps-prompt {
+	height: 100%;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	float: left;
+	margin-left: 1%;
+}
+#places-profiles, .places-profiles-title,
+#apps-list, .apps-list-title {
+	width: 100%;
+}
+.places-profiles-container, .places-content,
+.apps-list-container, .apps-content {
+	display: inline-block;
+	vertical-align: top;
+	height: 100%;
+}
+.places-profiles-container,
+.apps-list-container {
+	width: 20%;
+	margin-right: 2%;
+	margin-left: -1px;
+	border-right: 1px solid #ccc;
+}
+.places-content,
+.apps-content {
+	width: 78%;
+	margin-left: -0.25em;
+	position: relative;
+}
+#places-people,
+#apps-people {
+	position: absolute;
+	top: 0;
+}
+.places-content-titles,
+.apps-content-titles {
+	position: absolute;
+	top: 45px;
+	width: 100%;
+}
+#places-allow, #places-deny, #places-prompt,
+.places-allow-title, .places-deny-title, .places-prompt-title,
+#apps-allow, #apps-deny, #apps-prompt,
+.apps-allow-title, .apps-deny-title, .apps-prompt-title {
+	width: 32%;
+}
+.places-content-columns,
+.apps-content-columns {
+	height: 100%;
+	padding-top: 85px;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+.places-profiles-title,
+.apps-list-title {
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	padding: 0.5em 0.3em;
+	color: #0084ff;
+	font-size: 130%;
+	position: relative;
+	/*font-family: 'OpenSansRegular';
+	border-bottom: 1px dashed #0084ff;*/
+}
+#places-profiles span, #places-allow span, #places-deny span, #places-prompt span,
+.places-profiles-title span, .places-allow-title span, .places-deny-title span, .places-prompt-title span,
+#apps-list span, #apps-allow span, #apps-deny span, #apps-prompt span,
+.apps-list-title span, .apps-allow-title span, .apps-deny-title span, .apps-prompt-title span {
+	display: none;
+	position: absolute;
+	z-index: 10;
+	top: 5px;
+	right: 0;
+	font-size: 30px;
+	width: 1em;
+	text-align: center;
+	cursor: pointer;
+}
+
+#places-profiles span, #places-allow span, #places-deny span, #places-prompt span,
+#apps-list span, #apps-allow span, #apps-deny span, #apps-prompt span {
+	top: 0;
+	font-size: 10px;
+	width: auto;
+	border: 1px dotted #0084ff;
+	/*background: rgba(0,0,0,0.8);*/
+	background: #fff;
+}
+#places-profiles div:hover span, #places-allow div:hover span, #places-deny div:hover span, #places-prompt div:hover span,
+#apps-list div:hover span, #apps-allow div:hover span, #apps-deny div:hover span, #apps-prompt div:hover span {
+	display: block;
+}
+.places-profiles-title span, .places-allow-title span, .places-deny-title span, .places-prompt-title span,
+.apps-list-title span, .apps-allow-title span, .apps-deny-title span, .apps-prompt-title span {
+	display: block;
+	opacity: 0.2;
+}
+.places-profiles-title:hover span, .places-allow-title:hover span, .places-deny-title:hover span, .places-prompt-title:hover span,
+.apps-list-title:hover span, .apps-allow-title:hover span, .apps-deny-title:hover span, .apps-prompt-title:hover span {
+	opacity: 1;
+}
+#places-profiles img, #places-allow img, #places-deny img, #places-prompt img,
+#apps-list img, #apps-allow img, #apps-deny img, #apps-prompt img {
+	width: 10px;
+	padding: 8px;
+}
+#places-profiles img:hover, #places-allow img:hover, #places-deny img:hover, #places-prompt img:hover,
+#apps-list img:hover, #apps-allow img:hover, #apps-deny img:hover, #apps-prompt img:hover {
+	background: #eee;
+}
+.places-allow-title, .places-deny-title, .places-prompt-title,
+.apps-allow-title, .apps-deny-title, .apps-prompt-title {
+	padding: 0.3em 0.5em 0.3em;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	position: relative;
+	height: 40px;
+}
+.places-allow-title, .apps-allow-title {
+	/*color: #0f0;*/
+	background: rgba(0, 255, 0, 0.3);
+}
+.places-deny-title, .apps-deny-title {
+	/*color: #f00;*/
+	background: rgba(255, 0, 0, 0.3);
+}
+.places-prompt-title, .apps-prompt-title {
+	/*color: #ff0;*/
+	background: rgba(255, 255, 0, 0.3);
+}
+#places-allow, #apps-allow {
+	background: rgba(0, 255, 0, 0.1);
+}
+#places-deny, #apps-deny {
+	background: rgba(255, 0, 0, 0.1);
+}
+#places-prompt, #apps-prompt {
+	background: rgba(255, 255, 0, 0.1);
+}
+#places-allow > div, #places-deny > div, #places-prompt > div,
+#apps-allow > div, #apps-deny > div, #apps-prompt > div {
+	padding: 0.5em;
+	border-left: 3px solid rgba(0,0,0,0.1);
+	border-bottom: 1px dashed rgba(0,0,0,0.1);
+	position: relative;
+	font-size: 80%;
+	cursor: move;
+}
+#places-allow div b, #places-deny div b, #places-prompt div b,
+#apps-allow div b, #apps-deny div b, #apps-prompt div b {
+	display: block;
+	font-weight: bold;
+	font-size: 150%;
+}
+#places-allow > div, #apps-allow > div {
+	border-color: rgba(0, 255, 0, 0.3);
+}
+#places-deny > div, #apps-deny > div {
+	border-color: rgba(255, 0, 0, 0.3);
+}
+#places-prompt > div, #apps-prompt > div {
+	border-color: rgba(255, 255, 0, 0.3);
+}
+.column.over {
+	border: 1px dotted #aaa;
+}
+
+#places-profiles > div, #apps-list > div {
+	padding: 0.5em;
+	cursor: pointer;
+	font-size: 90%;
+	position: relative;
+}
+#places-profiles .selected, #apps-list .selected {
+	background: #555;
+	color: #fff;
+	cursor: default;
+}
+
+
+/* STORES */
+
+#storeListContainer > div {
+	position: relative;
+	border-top: 1px dotted #DDD;
+}
+#storeListContainer > div:first-child {
+	border-top: none;
+}
+
+#storesSettings label {
+	width: 100%;
+	display: block;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	padding-right: 30px;
+}
+#storesSettings input {
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin: 0;
+}
+
+#storesSettings h3 {
+	margin-bottom: 0.5em;
+}
+
+#storeListContainer > div:not(#foo) > input {
+	opacity: 0;
+}
+#storeListContainer > div:not(#foo) > input + label {
+    background: url(img/check.png) 100% 50% no-repeat;
+    padding: 12px 30px 12px 0;
+    font-size: 120%;
+	font-family: 'OpenSansLight';
+}
+#storeListContainer > div:not(#foo) > input[type=checkbox]:checked + label {
+    background: url(img/check-s.png) 100% 50% no-repeat;
+}
+
+#storesSettings hr {
+	border-color: #0084FF;
+	border-width: 1px 0 0 0;
+	border-style: dashed;
+	margin: 1.5em 0 1.5em;
+}
+
+#unknown-location {
+	margin-top: 1em;
+}
+#unk-loc-explained {
+	font-size: 90%;
+	padding: 5px;
+}
+
+
+/* PEOPLE */
+
+#peoplePolicies li {
+	position: relative;
+	border-top: 1px dotted #DDD;
+	padding-top: 10px;
+	margin-bottom: 10px;
+	min-height: 120px;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+#peoplePolicies li:first-child {
+	margin-top:10px;
+}
+
+#peoplePolicies li img {
+	width: 100px;
+	position: absolute;
+	margin: 0px 10px 10px 0;
+	top: 20px;
+}
+
+#peoplePolicies .name {
+	font-family: 'OpenSansLight';
+	font-size: 140%;
+	background-color: #0084FF;
+	color: white;
+	padding: 5px 0;
+	padding-left: 110px;
+}
+#peoplePolicies .email {
+	font-size: 85%;
+	background-color: #DDD;
+	padding: 5px;
+	padding-left: 110px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+#peoplePolicies .lastused {
+	margin-top: 0.5em;
+	padding-left: 110px;
+	font-size: 70%;
+}
+#peoplePolicies .lastused span {
+	font-weight: bold;
+}
+#peoplePolicies .lastused-timestamp {
+	display: none;
+}
+
+#peoplePolicies .button {
+	font-size: 80%;
+}
+#people-list .button {
+	margin-left: 110px;
+	margin-top: 10px;
+	width: 170px;
+}
+
+#peoplePolicies input {
+	border: 1px solid #444;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	padding: 5px;
+}
+
+/* PEOPLE - LIST.JS */
+
+.search-container {
+	display: table;
+	width: 100%;
+	margin-top: 5px;
+}
+.search-container label {
+	display: table-cell;
+	white-space: nowrap;
+}
+.search-container input {
+	display: table-cell;
+	width: 100%;
+}
+
+.sort-container {
+	margin: 10px 0 15px;
+}
+
+
+/************************* MOBILE PART ENDS HERE */
+
+
+@media screen and (min-width: 1020px) {
+	#tabTo-appsPolicies, #tabTo-placesPolicies {
+		display: block;
+	}
+
+	/* QUICK SETTINGS */
+
+	#localQuickSettings, #remoteQuickSettings,
+	.localQuickSettings-title, .remoteQuickSettings-title {
+		display: inline-block;
+		vertical-align: top;
+	}
+	#localQuickSettings {
+		width: 44%;
+		position: relative;
+	}
+	#remoteQuickSettings {
+		width: 44%;
+		margin-left: 5%;
+		padding-left: 5%;
+	}
+	#localQuickSettings, #remoteQuickSettings {
+		margin-top: 0;
+	}
+
+
+	/* STORES */
+
+	#storesSettings > div:not(#foo) > input + label {
+		font-size: 140%;
+	}
+}
