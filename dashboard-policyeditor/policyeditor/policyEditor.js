@@ -551,8 +551,8 @@ var enablePopups = function() {
 	domObjs.popupDeletePermission = document.getElementById('popup-deletePermission');
 	domObjs.popupDeleteProfile = document.getElementById('popup-deleteProfile');
 
-	//buttons opening popups
-	document.getElementById('t-test').onclick = function() {showPopup(domObjs.popupTest)};
+	    //buttons opening popups
+	    //document.getElementById('t-test').onclick = function() {showPopup(domObjs.popupTest)};
 		//document.getElementById('t-add').onclick = function() {showPopup(domObjs.popupAddToPolicy)};
 
 	domObjs.popupAddProfileId = document.getElementById('popup-addProfile-id');
