@@ -193,8 +193,11 @@ function envEnforceRequest(pe, ps, i, req) {
         if (res.effect > 1 && res.effect < 5) {
             appData.permissions[i-1].perm = 0;
         }
-        //console.log(JSON.stringify(req));
-        //console.log(JSON.stringify(appData.permissions[i-1]));
+        console.log("===================");
+        console.log(JSON.stringify(req));
+        console.log(JSON.stringify(res));
+        console.log(JSON.stringify(appData.permissions[i-1]));
+        console.log("===================");
         syncPermissions(-1);
     }, null);
 }
@@ -517,7 +520,7 @@ var drawPeopleList = function() {
 
 		html += '' +
 			'<li>' +
-				'<img src="static/img/'+pic+'">' +
+				'<img src="policyeditor/img/'+pic+'">' +
 				'<div class="name">'+ people[i].name +'</div>' +
 				'<div class="email">'+ people[i].email +'</div>' +
 				'<div class="lastused">Last used your personal zone: <span>'+ getDayName(thaDate)+', '+formatAMPM(thaDate) +'</span></div>' +
@@ -536,74 +539,6 @@ var drawPeopleList = function() {
         peopleList = new List('peoplePolicies', listOptions);
     // end of list.js
 };
-
-var enablePopups = function() {
-	//init
-	domObjs.popupOverlay = document.getElementById('popup_overlay');
-	domObjs.popupContainer = document.getElementById('popup_container');
-
-	//popups
-	domObjs.popupTest = document.getElementById('popup-test');
-		//domObjs.popupAddToPolicy = document.getElementById('popup-addToPolicy');
-		//domObjs.popupPolicyEntity = document.getElementById('popup-policyEntity');
-	domObjs.popupAddPermission = document.getElementById('popup-addPermission');
-	domObjs.popupAddProfile = document.getElementById('popup-addProfile');
-	domObjs.popupDeletePermission = document.getElementById('popup-deletePermission');
-	domObjs.popupDeleteProfile = document.getElementById('popup-deleteProfile');
-
-	    //buttons opening popups
-	    //document.getElementById('t-test').onclick = function() {showPopup(domObjs.popupTest)};
-		//document.getElementById('t-add').onclick = function() {showPopup(domObjs.popupAddToPolicy)};
-
-	domObjs.popupAddProfileId = document.getElementById('popup-addProfile-id');
-	domObjs.popupAddProfileName = document.getElementById('popup-addProfile-name');
-	document.getElementById('placesAddProfile').onclick = function() {profileEditPopup()};
-
-	document.getElementById('placesAddAllow').onclick = function() {permissionEditPopup('allow')};
-	document.getElementById('placesAddPrompt').onclick = function() {permissionEditPopup('prompt')};
-	document.getElementById('placesAddDeny').onclick = function() {permissionEditPopup('deny')};
-	document.getElementById('appsAddAllow').onclick = function() {permissionEditPopup('allow')};
-	document.getElementById('appsAddPrompt').onclick = function() {permissionEditPopup('prompt')};
-	document.getElementById('appsAddDeny').onclick = function() {permissionEditPopup('deny')};
-	document.getElementById('popup-deletePermission-confirm').onclick = function() {deletePermission()};
-	document.getElementById('popup-deleteProfile-confirm').onclick = function() {placesDeleteProfile()};
-
-	//buttons/elements inside popups
-	document.getElementById('popup-addProfile-save').onclick = function() {placesAddEditProfile()};
-	document.getElementById('popup-addPermission-save').onclick = function() {addEditPermission()};
-
-		//document.getElementById('popup-addToPolicy-profile').onclick = function() {policyEntityNewdit('profile')};
-		//document.getElementById('popup-addToPolicy-object').onclick = function() {policyEntityNewdit('object')};
-		//document.getElementById('popup-addToPolicy-service').onclick = function() {policyEntityNewdit('service')};
-
-	domObjs.popupAddPermissionId = document.getElementById('popup-addPermission-id');
-	domObjs.popupAddPermissionName = document.getElementById('popup-addPermission-name');
-	domObjs.popupAddPermissionApp = document.getElementById('popup-addPermission-app');
-	domObjs.popupAddPermissionType = document.getElementById('popup-addPermission-type');
-	domObjs.popupAddPermissionAction = document.getElementById('popup-addPermission-action');
-	domObjs.popupAddPermissionNameContainer = document.getElementById('popup-addPermission-name-container');
-	domObjs.popupAddPermissionAppContainer = document.getElementById('popup-addPermission-app-container');
-
-	/* policy entity edit tabs - quite verbose... but it seems like I don't need a function for anything similar to this */
-	var popupAddPermissionSummaryTab = document.getElementById('popup-addPermission-summary-tab');
-	var popupAddPermissionDetailsTab = document.getElementById('popup-addPermission-details-tab');
-	var popupAddPermissionTabs = [popupAddPermissionSummaryTab, popupAddPermissionDetailsTab];
-	domObjs.popupAddPermissionSummaryPage = document.getElementById('popup-addPermission-summary-content');
-	domObjs.popupAddPermissionDetailsPage = document.getElementById('popup-addPermission-details-content');
-
-	popupAddPermissionSummaryTab.onclick = function() {
-		selectItem(popupAddPermissionTabs, 0);
-		domObjs.popupAddPermissionSummaryPage.style.display = 'block';
-		domObjs.popupAddPermissionDetailsPage.style.display = 'none';
-	}
-	popupAddPermissionDetailsTab.onclick = function() {
-		selectItem(popupAddPermissionTabs, 1);
-		domObjs.popupAddPermissionSummaryPage.style.display = 'none';
-		domObjs.popupAddPermissionDetailsPage.style.display = 'block';
-	}
-	/* policy entity edit tabs END */
-
-}();
 
 
 var filledServicesSelection = false;
@@ -693,11 +628,11 @@ function createProfileListEntry(profile, parentElement, tab) {
 	if(tab == 'placesPolicies') {
 		var controls = document.createElement("span");
 		var edit = document.createElement("img");
-		edit.src = "static/img/edit.png";
+		edit.src = "policyeditor/img/edit.png";
 		edit.setAttribute('alt', 'Edit');
 		edit.onclick = function(e) {e.stopPropagation(); profileEditPopup(profile.id);};
 		var del = document.createElement("img");
-		del.src = "static/img/delete.png";
+		del.src = "policyeditor/img/delete.png";
 		del.setAttribute('alt', 'Delete');
 		del.onclick = function(e) {e.stopPropagation(); profileDeletePopup(profile.id);};
 		controls.appendChild(edit);
@@ -773,11 +708,11 @@ function createPermissionEntry(permission, docFrag, tab) {
 	entry.appendChild(name);
 	controls = document.createElement("span");
 	edit = document.createElement("img");
-	edit.src = "static/img/edit.png";
+	edit.src = "policyeditor/img/edit.png";
 	edit.setAttribute('alt', 'Edit');
 	edit.onclick = function(e) {permissionEditPopup(permission.id);};
 	del = document.createElement("img");
-	del.src = "static/img/delete.png";
+	del.src = "policyeditor/img/delete.png";
 	del.setAttribute('alt', 'Delete');
 	del.onclick = function(e) {permissionDeletePopup(permission.id);};
 	controls.appendChild(edit);

@@ -484,13 +484,13 @@ color: #bbb;
 		vertical-align: top;
 	}
 	#localQuickSettings {
-		width: 44%;
+		width: 43%;
 		position: relative;
 	}
 	#remoteQuickSettings {
-		width: 44%;
-		margin-left: 5%;
-		padding-left: 5%;
+		width: 48%;
+		margin-left: 3%;
+		padding-left: 3%;
 	}
 	#localQuickSettings, #remoteQuickSettings {
 		margin-top: 0;
