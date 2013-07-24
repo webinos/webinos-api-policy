@@ -849,7 +849,7 @@
         );
     };
 
-    function testPolicy(policyset, request, successCB, errorCB) {
+    function testPolicy(policyset, request, successCB, errorCB) { 
         var rpc = webinos.rpcHandler.createRPC(this, "testPolicy", [policyset.getBaseFile(), JSON.stringify(request)]);
         webinos.rpcHandler.executeRPC(rpc
             , function (params) {
