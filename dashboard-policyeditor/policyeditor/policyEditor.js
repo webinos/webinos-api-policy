@@ -122,30 +122,29 @@ webinos.discovery.findServices(new ServiceType('http://webinos.org/core/policyma
                         }
                     }
 
-                    // At the moment we don't know the user-id of the zone
-                    // owner. As a workaround we suppose to have a policy with
-                    // id "local-discoverability".
-                    // The user-id in the target of this policy is the one of
-                    // the zone owner.
-                    var localDiscoverabilityPolicy = ps.getPolicy("local-discoverability");
-                    if (localDiscoverabilityPolicy) {
-                        var owner = getMatch(JSON.stringify(localDiscoverabilityPolicy.toJSONObject()), "user-id");
-                        if (owner[0]) {
-                            appData.localQuickSettings = [];
-                            for (var i = 0; i < appData.services.length; i++) {
-                                if (appData.services[i].uri !== discovery) {
-                                    var p = {};
-                                    p.name = appData.services[i].name;
-                                    var request = {};
-                                    request.subjectInfo = {};
-                                    request.subjectInfo.userId = owner[0];
-                                    request.resourceInfo = {};
-                                    request.resourceInfo.apiFeature = discovery;
-                                    request.resourceInfo.paramFeature = appData.services[i].uri;
-                                    appData.localQuickSettings.push(p);
-                                    syncLocalQuickSettings(+1);
-                                    localQuickSettingsEnforceRequest(policyeditor, ps, appData.localQuickSettings.length, request);
-                                }
+                    var owner = null;
+                    if (webinos.session.isConnected()) {
+                        owner = webinos.session.getPZHId();
+                    }
+                    else{ //virgin mode only
+                        owner = webinos.session.getPZPId();
+                    }
+
+                    if (owner) {
+                        appData.localQuickSettings = [];
+                        for (var i = 0; i < appData.services.length; i++) {
+                            if (appData.services[i].uri !== discovery) {
+                                var p = {};
+                                p.name = appData.services[i].name;
+                                var request = {};
+                                request.subjectInfo = {};
+                                request.subjectInfo.userId = owner;
+                                request.resourceInfo = {};
+                                request.resourceInfo.apiFeature = discovery;
+                                request.resourceInfo.paramFeature = appData.services[i].uri;
+                                appData.localQuickSettings.push(p);
+                                syncLocalQuickSettings(+1);
+                                localQuickSettingsEnforceRequest(policyeditor, ps, appData.localQuickSettings.length, request);
                             }
                         }
                     }
@@ -193,11 +192,8 @@ function envEnforceRequest(pe, ps, i, req) {
         if (res.effect > 1 && res.effect < 5) {
             appData.permissions[i-1].perm = 0;
         }
-        console.log("===================");
-        console.log(JSON.stringify(req));
-        console.log(JSON.stringify(res));
-        console.log(JSON.stringify(appData.permissions[i-1]));
-        console.log("===================");
+        //console.log(JSON.stringify(res));
+        //console.log(JSON.stringify(appData.permissions[i-1]));
         syncPermissions(-1);
     }, null);
 }
@@ -290,6 +286,21 @@ function getMatch(policy, string) {
     var exp = new RegExp('match"\s*:\s*"([^"]*)"\s*,\s*"attr"\s*:\s*"' + string + '"', 'g');
     while (val = exp.exec(policy)) {
         obj[val[1]] = 0;
+    }
+
+    if (string == "user-id") {
+        console.log("====================");
+        console.log("matching string: " + string);
+        console.log("Is it connected? " + webinos.session.isConnected());
+        if (webinos.session.isConnected()) {
+            console.log("PZHId: " + webinos.session.getPZHId());
+            obj[webinos.session.getPZHId()] = 0;
+        }
+        else{ //virgin mode only
+            console.log("PZPId: " + webinos.session.getPZPId());
+            obj[webinos.session.getPZPId()] = 0;
+        }
+        console.log("====================");
     }
 
     for (var i in obj) {
@@ -471,7 +482,7 @@ function drawRemoteQuickSettings() {
 	remoteQuickSettingsContainer.innerHTML = html;
 };
 
-
+/*
 var drawStoreList = function() {
 	var storeListContainer = document.getElementById('storeListContainer'),
 		html = '',
@@ -497,7 +508,7 @@ var drawStoreList = function() {
 
 	drawPermissionButtons('unk-loc-per-con', [{n:"Allow",c:"allow"}, {n:"Allow once",c:"prompt"}, {n:"Deny",c:"deny"}], 1);
 }();
-
+*/
 var listOptions, peopleList;
 
 var drawPeopleList = function() {
