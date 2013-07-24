@@ -31,8 +31,8 @@ function domReady () {
 	//menu items and tabs init
 	enableMenuAndInitFirstPage('menu', 'screens');
 	enableMenuAndInitFirstPage('policyEditor-tabs', 'tabsPolEd');
-	var polEdSwTabs = new SwipeableTabs('policyEditor-tabs', 'policyEditorPage');
-    polEdSwTabs.init();
+	//var polEdSwTabs = new SwipeableTabs('policyEditor-tabs', 'policyEditorPage');
+    //polEdSwTabs.init();
 }
 
 
