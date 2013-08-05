@@ -35,9 +35,9 @@
         };
     }
 
-    
+
         var policy = function(ps, id, combine, description){
-        
+
         var _ps = ps;
         if(ps)
             _ps = ps;
@@ -97,7 +97,7 @@
                         if(rule.condition){
                             //check first child
                             var parent = rule["condition"];
-                            
+
                             var tmp = parent[0];
                             console.log(JSON.stringify(rule["condition"]));
                             if(tmp['$']["id"] == value['$']["id"]){
@@ -146,10 +146,10 @@
                 }
 
                 else{
-                    
+
                     //check first child
                     var parent = rule["condition"];
-                    
+
                     var tmp = parent[0];
 
                     if(tmp['$']["id"] == updatedCondition['$']["id"]){
@@ -204,11 +204,11 @@
                     policy["rule"].length;
                 if(!rulePosition && policy["rule"])
                     position = policy["rule"].length;
-                
+
                 console.log("position : "+position);
                 if(!policy["rule"])
                     policy["rule"] = [rule];
-                else    
+                else
                     policy["rule"].splice(position, 0, rule);
             }
 
@@ -258,10 +258,10 @@
                     console.log("Removing rule " + index);
                     policy["rule"].splice(index,1);
                     if(count == 1)
-                        policy["rule"] = undefined; 
+                        policy["rule"] = undefined;
                 }
-                   
-                
+
+
             }
             else
                 console.log("No rules");
@@ -278,10 +278,10 @@
             if(policy == null) {
                 return null;
             }
-           
+
             var id = (newSubjectId) ? newSubjectId : new Date().getTime();
             var newsubj = {"$" : {"id" : id} , "subject-match" : [] };
-        
+
             for(var i in matches){
                 if(i == "subject-match")
                     newsubj["subject-match"].push(matches[i]);
@@ -298,7 +298,7 @@
                         console.log("A subject with " + newSubjectId + " is already present");
                         return;
                     }
-                } 
+                }
             policy.target[0]["subject"].push(newsubj);
             //console.log(JSON.stringify(policy.target[0]));
 
@@ -330,7 +330,7 @@
 
             //var policy = (policyId) ? getPolicyById(_ps, policyId) : _ps;
             var policy = _ps;
-            
+
             //console.log(policy);
 
             var count = 0;
@@ -386,7 +386,7 @@
             else if (key == "description") {
                 _ps['$']["description"] = value;
             }
-                
+
         };
 
         this.toJSONObject = function(){
@@ -415,7 +415,7 @@
             _ps['$']["combine"] = combine;
         if(description)
             _ps['$']["description"] = description;
-        
+
         this.getBaseFile = function(){
             return _basefile;
         };
@@ -458,7 +458,7 @@
 
         function getPolicySetById(policySet, policyId) {
             //console.log('getPolicyById - policySet is '+JSON.stringify(policySet));
-            
+
             if(policySet['policy-set']) {
                 for(var j in policySet['policy-set']) {
                     if(policySet['policy-set'][j]['$']['id'] == policyId) {
@@ -483,7 +483,7 @@
 
             //var policy = (policyId) ? getPolicyById(_ps, policyId) : _ps;
             var policy = _ps;
-            
+
             //console.log(policy);
 
             if(policy.target[0]["subject"]){
@@ -525,7 +525,7 @@
                 for(var j in policySet['policy']) {
                     if(policySet['policy'][j]['$']['id'] == policyId) {
                         policySet['policy'].splice(j, 1);
-                        return true; 
+                        return true;
                     }
                 }
             }
@@ -562,9 +562,9 @@
       this.addPolicy = function(newPolicy, newPolicyPosition){
 //      this.addPolicy = function(policyId, combine, description, newPolicyPosition, succCB){
 //      var newPolicy = createPolicy(policyId, combine, description);
-            if(!_ps) 
+            if(!_ps)
                 return null;
-            
+
             if(!_ps["policy"])
                 _ps["policy"] = new Array();
             else{
@@ -579,15 +579,15 @@
             var position = (newPolicyPosition == undefined || newPolicyPosition<0 || _ps["policy"].length == 0) ? _ps["policy"].length : newPolicyPosition;
             _ps['policy'].splice(position, 0, newPolicy.getInternalPolicy());
             //succCB(newPolicy);
-            
+
         };
 
         this.addPolicySet = function(newPolicySet, newPolicySetPosition){
         //this.addPolicySet = function(policySetId, combine, description, newPolicySetPosition){
             //var newPolicySet = createPolicySet(policySetId, combine, description);
-            if(!_ps) 
+            if(!_ps)
                 return null;
-            
+
             if(!_ps['policy-set'])
                 _ps['policy-set'] = new Array();
             else{
@@ -602,9 +602,9 @@
             var position = (newPolicySetPosition == undefined || newPolicySetPosition<0 || _ps['policy-set'].length == 0) ? _ps['policy-set'].length : newPolicySetPosition;
             _ps['policy-set'].splice(position, 0, newPolicySet.getInternalPolicySet());
             /*
-            if(!_ps) 
+            if(!_ps)
                 return null;
-            
+
             if(!_ps["policy-set"])
                 _ps["policy-set"] = new Array();
 
@@ -615,7 +615,7 @@
             */
         };
 
-        
+
 
         // add subject to policyset
         this.addSubject = function(newSubjectId, matches){
@@ -629,10 +629,10 @@
             if(policy == null) {
                 return null;
             }
-           
+
             var id = (newSubjectId) ? newSubjectId : new Date().getTime(); //Ecco perchè inserendo ID vuoto metto la data
             var newsubj = {"$" : {"id" : id} , "subject-match" : [] };
-        
+
             for(var i in matches){
                 if(i == "subject-match")
                     newsubj["subject-match"].push(matches[i]);
@@ -642,14 +642,14 @@
 
             if(!policy.target[0]["subject"])
                 policy.target[0]["subject"] = [];
-                
+
             //console.log(JSON.stringify(policy.target[0]));
             for(var i =0; i<policy.target[0]["subject"].length; i++){
                     if(policy.target[0]["subject"][i]['$']["id"] == newSubjectId){
                         console.log("A subject with " + newSubjectId + " is already present");
                         return;
                     }
-                }    
+                }
             policy.target[0]["subject"].push(newsubj);
             //console.log(JSON.stringify(policy.target[0]));
 
@@ -709,7 +709,7 @@
             if(policy == null) {
                 return null;
             }
-            
+
             if(policy.target && policy.target[0] && policy.target[0]["subject"]){
                 var subjects = policy.target[0]["subject"];
                 for(var i in subjects){
@@ -732,7 +732,7 @@
             }
             removePolicyById(_ps, policyId);
             if (_ps['policy'].length == 0) {
-                _ps['policy'] = undefined;                
+                _ps['policy'] = undefined;
             }
         };
 
@@ -750,10 +750,10 @@
             console.log(_ps['policy-set']);
             if (_ps['policy-set'].length == 0) {
                 _ps['policy-set'] = undefined;
-            }   
+            }
         };
 
-        
+
 
         this.removeSubject = function(subjectId) {
             if(!_ps) {
@@ -766,7 +766,7 @@
 
             //var policy = (policyId) ? getPolicyById(_ps, policyId) : _ps;
             var policy = _ps;
-            
+
             //console.log(policy);
 
             var count = 0;
@@ -787,7 +787,7 @@
                     if(count == 1)
                         policy.target = undefined;
                 }
-                
+
             }
             //console.log("AFTER : " + JSON.stringify(policy["rule"]));
         };
@@ -804,7 +804,7 @@
                 _ps['$']["combine"] = combine;
             if(description)
                 _ps['$']["description"] = description;};*/
-        
+
 
         this.toJSONObject = function(){
             return _ps;
@@ -833,12 +833,12 @@
             );
         }
         else {
-            success(new policyset(policyFiles[policyset_id].content, "policy-set", policyset_id));              
+            success(new policyset(policyFiles[policyset_id].content, "policy-set", policyset_id));
         }
     };
 
     function save(policyset, successCB, errorCB) {
-        var rpc = webinos.rpcHandler.createRPC(this, "setPolicy", [policyset.getBaseFile(), policyset.toJSONString()]);
+        var rpc = webinos.rpcHandler.createRPC(this, "setPolicy", [policyset.getBaseFile(), JSON.stringify(policyset.toJSONObject())]);
         webinos.rpcHandler.executeRPC(rpc
             , function (params) {
                 successCB(params);
@@ -849,7 +849,7 @@
         );
     };
 
-    function testPolicy(policyset, request, successCB, errorCB) { 
+    function testPolicy(policyset, request, successCB, errorCB) {
         var rpc = webinos.rpcHandler.createRPC(this, "testPolicy", [policyset.getBaseFile(), JSON.stringify(request)]);
         webinos.rpcHandler.executeRPC(rpc
             , function (params) {
