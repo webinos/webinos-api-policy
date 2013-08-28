@@ -473,6 +473,100 @@
             return null;
         };
 
+        function getPolicySetBySubject(policySet, subject) {
+            var res = {'generic':[], 'matched':[]};
+            if(policySet['policy-set']) {
+                for(var j in policySet['policy-set']) {
+                    var checkRes = checkPolicySetSubject(policySet['policy-set'][j] , subject);
+                    if (checkRes == 0){
+                        res['generic'].push(new policyset(policySet['policy-set'][j], "policy-set"));
+                    } else if (checkRes == 1){
+                                res['matched'].push(new policyset(policySet['policy-set'][j], "policy-set"));
+                    }
+                    if (policySet['policy-set'][j]['policy-set']){
+                        var tmpRes = getPolicySetBySubject(policySet['policy-set'][j], subject);
+                        for (var e in tmpRes){
+                            if (res[e] && tmpRes[e].length > 0){
+                                res[e] = res[e].concat(tmpRes[e]);
+                            }
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+
+        function checkPolicySetSubject(policySet, subject){
+            psSubject = null;
+            try{
+                psSubject = policySet['target'][0]['subject'];
+            }
+            catch(err) {
+                return 0; //subject not specified (it's still a subject match)
+            }
+            if (psSubject){
+                var numMatchedSubjects = 0;
+                for (var i in psSubject) {
+                    psSubjectMatch_i = null;
+                    try {
+                        psSubjectMatch_i = psSubject[i]['subject-match'][0]['$']['match'];
+                    
+                    } catch (err) { continue; }
+                    var index = subject.indexOf(psSubjectMatch_i);
+                    if (index > -1){
+                        numMatchedSubjects++;
+                    } 
+                }
+                if (numMatchedSubjects == subject.length){
+                    return 1; //subject matches
+                }
+            }
+            return -1; //subject doesn't match
+        }
+
+        function getPolicyBySubject(policySet, subject) {
+            var res = {'generic':[], 'matched':[]};
+            if(policySet['policy'] && checkPolicySetSubject(policySet, subject) > -1) {
+                for(var j in policySet['policy']) {
+                    pSubject = null;
+                    try{
+                        pSubject = policySet['policy'][j]['target'][0]['subject'];
+                    }
+                    catch(err) {
+                        res['generic'].push(new policy(policySet['policy'][j]));
+                    }
+                    if (pSubject){
+                        var numMatchedSubjects = 0;
+                        for (var i in pSubject) {
+                            pSubjectMatch_i = null;
+                            try {
+                                pSubjectMatch_i = pSubject[i]['subject-match'][0]['$']['match'];
+                            
+                            } catch (err) { continue; }
+                            var index = subject.indexOf(pSubjectMatch_i);
+                            if (index > -1){
+                                numMatchedSubjects++;
+                            } 
+                        }
+                        if (numMatchedSubjects == subject.length){
+                                res['matched'].push(new policy(policySet['policy'][j]));
+                        }
+                    }
+                }
+            }
+            if(policySet['policy-set']) {
+                for(var j in policySet['policy-set']) {
+                    var tmpRes = getPolicyBySubject(policySet['policy-set'][j], subject);
+                    for (var e in tmpRes){
+                        if (res[e] && tmpRes[e].length > 0){
+                            res[e] = res[e].concat(tmpRes[e]);
+                        }                
+                    }
+                }
+            }
+            return res;
+        }
+
         this.removeSubject = function(subjectId, policyId) {
             if(!_ps) {
                 return null;
@@ -655,30 +749,30 @@
 
         };
 
-        //this.getPolicy = function(policyId, succCB, errCB){
         this.getPolicy = function(policyId){
-            //console.log(_ps);
-            if(policyId){
-                var tmp = getPolicyById(_ps, policyId);
-                if(tmp){
-                    return new policy(tmp);
-                    //succCB(new policy(tmp));
-                    return;
+            if (policyId){
+                if(typeof policyId == "object" && policyId.length){
+                    return getPolicyBySubject(_ps, policyId);
+                } else {
+                    var tmp = getPolicyById(_ps, policyId);
+                    if(tmp){
+                        return new policy(tmp);
+                    }
                 }
             }
-            //errCB();
         };
 
-        //this.getPolicySet = function(policySetId, succCB, errCB){
         this.getPolicySet = function(policySetId){
             if(policySetId){
-                var tmp = getPolicySetById(_ps, policySetId);
-                if(tmp){
-                    return new policyset(tmp, "policy-set", _basefile, _fileId);
-                    //succCB(new policyset(tmp, "policy-set", _basefile, _fileId));
+                if(typeof policySetId == "object" && policySetId.length){
+                    return getPolicySetBySubject(_ps, policySetId);
+                } else {
+                    var tmp = getPolicySetById(_ps, policySetId);
+                    if(tmp){
+                        return new policyset(tmp, "policy-set", _basefile, _fileId);
+                    }
                 }
             }
-            //errCB();
         };
 
 /*
