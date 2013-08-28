@@ -933,7 +933,7 @@
     };
 
     function save(policyset, successCB, errorCB) {
-        var rpc = webinos.rpcHandler.createRPC(this, "setPolicy", [policyset.getBaseFile(), policyset.toJSONString()]);
+        var rpc = webinos.rpcHandler.createRPC(this, "setPolicy", [policyset.getBaseFile(), JSON.stringify(policyset.toJSONObject())]);
         webinos.rpcHandler.executeRPC(rpc
             , function (params) {
                 successCB(params);
