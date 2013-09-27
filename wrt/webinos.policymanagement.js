@@ -84,16 +84,14 @@
             }
 
             if(rule){
-
-
                 if(key == "effect"){
                     if(value)
                         rule['$']["effect"] = value;
                     else
                         rule['$']["effect"] = "permit";
                 }
-                else if(key == "condition"){
 
+                else if(key == "condition"){
                     if(value){
                         if(rule.condition){
                             //check first child
@@ -109,11 +107,11 @@
                             //check other children
                             while(true){
                                 if(tmp.condition && value){
-
                                     if(tmp.condition[0]['$']["id"] == value['$']["id"]){
                                         tmp.condition[0] = value;
                                         return;
                                     }
+
                                     else
                                         tmp = tmp.condition;
                                 }
@@ -121,10 +119,12 @@
                                     break;
                             }
                         }
+
                         else{
                             rule["condition"] = [value];
                         }
                     }
+
                     else{
                         if(rule.condition){
                             rule.condition = undefined;
@@ -261,8 +261,6 @@
                     if(count == 1)
                         policy["rule"] = undefined;
                 }
-
-
             }
             else
                 console.log("No rules");
@@ -309,7 +307,6 @@
             if(!_ps) {
                 return null;
             }
-
             var policy = (policyId) ? getPolicyById(_ps, policyId) : _ps;
 
             if(policy == null) {
@@ -475,17 +472,26 @@
         };
 
         function getPolicySetBySubject(policySet, subject) {
+	    //Here is what need to be changed, changed to can get subject's name, to generic url. like the zoneOwner or other things
             var res = {'generic':[], 'matched':[]};
-            if(policySet['policy-set']) {
+            
+	    if(policySet['policy-set']) {
                 for(var j in policySet['policy-set']) {
+		    // Still checkPolicySetSubject need to be checked!
                     var checkRes = checkPolicySetSubject(policySet['policy-set'][j] , subject);
+		    // if can not find the subject in the policySet['policy-set'][j], add the new policyset into res['generic'] field.
                     if (checkRes == 0){
+			
                         res['generic'].push(new policyset(policySet['policy-set'][j], "policy-set"));
+		    // if found the subject, will add the new policyset into the res['matched'] field.
                     } else if (checkRes == 1){
                                 res['matched'].push(new policyset(policySet['policy-set'][j], "policy-set"));
                     }
+
                     if (policySet['policy-set'][j]['policy-set']){
+			// if the policy-set is inside another policy-set, then this part of the function is needed.
                         var tmpRes = getPolicySetBySubject(policySet['policy-set'][j], subject);
+			// e here has two options, to be generic or matched.
                         for (var e in tmpRes){
                             if (res[e] && tmpRes[e].length > 0){
                                 res[e] = res[e].concat(tmpRes[e]);
@@ -499,12 +505,14 @@
 
         function checkPolicySetSubject(policySet, subject){
             psSubject = null;
+	    // if the policySet doesn't have target field.
             try{
                 psSubject = policySet['target'][0]['subject'];
             }
             catch(err) {
                 return 0; //subject not specified (it's still a subject match)
             }
+
             if (psSubject){
                 var numMatchedSubjects = 0;
                 for (var i in psSubject) {
@@ -513,11 +521,13 @@
                         psSubjectMatch_i = psSubject[i]['subject-match'][0]['$']['match'];
                     
                     } catch (err) { continue; }
+
                     var index = subject.indexOf(psSubjectMatch_i);
                     if (index > -1){
                         numMatchedSubjects++;
                     } 
                 }
+
                 if (numMatchedSubjects == subject.length){
                     return 1; //subject matches
                 }
@@ -525,8 +535,10 @@
             return -1; //subject doesn't match
         }
 
+
         function getPolicyBySubject(policySet, subject) {
             var res = {'generic':[], 'matched':[]};
+
             if(policySet['policy'] && checkPolicySetSubject(policySet, subject) > -1) {
                 for(var j in policySet['policy']) {
                     pSubject = null;
@@ -534,27 +546,31 @@
                         pSubject = policySet['policy'][j]['target'][0]['subject'];
                     }
                     catch(err) {
+			// this means no pSubject is found.
                         res['generic'].push(new policy(policySet['policy'][j]));
                     }
+
                     if (pSubject){
                         var numMatchedSubjects = 0;
                         for (var i in pSubject) {
                             pSubjectMatch_i = null;
                             try {
                                 pSubjectMatch_i = pSubject[i]['subject-match'][0]['$']['match'];
-                            
+                            // if can not find subject, it doesn't matter. go on!
                             } catch (err) { continue; }
                             var index = subject.indexOf(pSubjectMatch_i);
                             if (index > -1){
                                 numMatchedSubjects++;
                             } 
                         }
+
                         if (numMatchedSubjects == subject.length){
                                 res['matched'].push(new policy(policySet['policy'][j]));
                         }
                     }
                 }
             }
+
             if(policySet['policy-set']) {
                 for(var j in policySet['policy-set']) {
                     var tmpRes = getPolicyBySubject(policySet['policy-set'][j], subject);
