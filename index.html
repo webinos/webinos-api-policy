@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Webinos Simplified Policy Editor Settings</title>
+   	<meta charset="utf-8">
+	<link rel="stylesheet" href="simplifiedpolicyeditor/main.css">
+	<!--head-->
+	<link rel="stylesheet" href="simplifiedpolicyeditor/simplifiedPolicyEditor.css">
+	<!--/head-->
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+</head>
+<body>
+	<img class="webinoslogo" src="simplifiedpolicyeditor/img/webinosWithBorder.png">
+	<div class="header">
+		<div id="show-menu" class="header-left-button"><span class="notification-icon">2</span></div>
+		<img class="webinoslogo-header" src="simplifiedpolicyeditor/img/webinosWithBorder.png">
+		<div class="title">PZx SETTINGS</div>
+		<div id="show-actions" class="header-right-button"></div>
+	</div>
+
+	<div class="header menu" id="menu">
+		<div id="linkTo-peoplePage" class="selected">People</div>
+		<div id="linkTo-servicePage">Service Admin</div>
+		<div id="linkTo-webinosExplorerPage">Webinos Explorer</div>
+		<div id="linkTo-appListPage">App List</div>
+		<div id="linkTo-notificationsPage">Notifications<span class="notification-icon">2</span></div>
+		<div id="linkTo-policyEditorPage">Simplified Policy Editor</div>
+	</div>
+
+	<div class="content-container">
+		<div id="peoplePage" class="content">
+			PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>
+			PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>
+			PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>
+			PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>
+			PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>PEOPLE<br>
+		</div>
+
+		<div id="servicePage" class="content">
+			SERVICE ADMIN
+		</div>
+
+		<div id="webinosExplorerPage" class="content">
+			WEBINOS EXPLORER
+		</div>
+
+		<div id="appListPage" class="content">
+			APP LIST
+		</div>
+
+		<div id="notificationsPage" class="content">
+			NOTIFICATIONS
+		</div>
+
+		<div id="policyEditorPage" class="content tab-container">
+			<!--content-->
+			<div class="tabs" id="policyEditor-tabs">
+				<div id="tabTo-quickSettings" class="selected">Quick Settings</div>
+				<div id="tabTo-peoplePolicies">People</div>
+				<div id="tabTo-servicesPolicies">Services</div>
+			</div>
+
+			<div id="quickSettings" class="tab-content">
+				<div id="quickSettings-switches">
+					<h1 class="quickSettings-switches-title">Quick Settings</h1>
+					<div id="quickSettings-switches-content"></div>
+				</div>
+				<div id="quickSettings-status">
+					<h1 class="quickSettings-status-title">Device Status</h1>
+					<div id="quickSettings-status-content"></div>
+				</div>
+			</div>
+
+			<div id="peoplePolicies" class="tab-content">
+				<div class="services-list-container">
+					<h1 class="services-list-title">Services<br><br><br></h1>
+					<div id="services-list" class="column"></div>
+				</div>
+
+				<div class="services-content">
+					<select id="people-services"></select>
+
+					<div class="services-content-titles">
+
+<!--
+						<h1 class="services-allow-title">Allow<span id="servicesAddAllow">+</span></h1>
+						<h1 class="services-deny-title">Deny<span id="servicesAddDeny">+</span></h1>
+-->
+						<h1 class="services-allow-title">Allow<span id="servicesAddAllow">+</span></h1>
+						<h1 class="services-deny-title">Deny<span id="servicesAddDeny">+</span></h1>
+					</div>
+					<div class="services-content-columns">
+						<div id="services-allow" class="column"></div>
+						<div id="services-deny" class="column"></div>
+					</div>
+				</div>
+			</div>
+
+			<div id="servicesPolicies" class="tab-content">
+				<div class="people-list-container">
+					<h1 class="people-list-title">People<br><br><br></h1>
+					<div id="people-list" class="column"></div>
+				</div>
+
+				<div class="people-content">
+					<select id="services-people"></select>
+
+					<div class="people-content-titles">
+
+<!--						The spans are not necessary any more
+						<h1 class="people-allow-title">Allow<span id="peopleAddAllow">+</span></h1>
+						<h1 class="people-deny-title">Deny<span id="peopleAddDeny">+</span></h1>
+-->
+						
+						<h1 class="people-allow-title">Allow<span id="peopleAddAllow">+</span></h1>
+						<h1 class="people-deny-title">Deny<span id="peopleAddDeny">+</span></h1>
+					</div>
+					<div class="people-content-columns">
+						<div id="people-allow" class="column"></div>
+						<div id="people-deny" class="column"></div>
+					</div>
+				</div>
+			</div>
+
+
+
+			
+			<!--/content-->
+		</div>
+	</div>
+
+	<div id="toolbar" class="header toolbar">
+		<!--<div id="toolbar-showhide"></div>-->
+		<div id="t-open">Open</div>
+		<div id="t-save">Save</div>
+		<div id="t-test">Test</div>
+		<div id="t-sync">Sync</div>
+		<!--<hr>
+		<div id="t-add">Add</div>
+		<div id="t-del">Delete</div>-->
+	</div>
+
+
+
+
+
+	<!--content-->
+	<div id="popup_overlay">
+		<div id="popup_container">
+			<div class="popup" id="popup-test">
+				<!--<div class="popup-close xclose">x</div>-->
+				<h1>Test Title</h1>
+				<div>Bacon ipsum dolor sit amet ham beef ribs pork loin ball tip pork belly prosciutto. T-bone short ribs flank rump meatball, andouille kielbasa pastrami capicola shankle strip steak tail.</div>
+				<div class="button popup-close ok">OK</div>
+				<div class="button popup-close">Cancel</div>
+			</div>
+
+			<!--<div class="popup" id="popup-addToPolicy">
+				<div class="popup-close xclose">x</div>
+				<h1>Add to policy</h1>
+				<div class="button" id="popup-addToPolicy-profile">New Profile</div>
+				<div class="button" id="popup-addToPolicy-object">New Object</div>
+				<div class="button" id="popup-addToPolicy-service">New Service</div>
+			</div>-->
+<!--
+			<div class="popup" id="popup-addProfile">
+				<div class="popup-close xclose">x</div>
+				<h1>Add/Edit Environment</h1>
+				<input type="hidden" id="popup-addProfile-id">
+				<div class="popup-input-row">
+					<label for="addProfile-name">Environment Name</label>
+					<input type="text" id="popup-addProfile-name">
+				</div>
+				<div class="button popup-close ok" id="popup-addProfile-save">Add</div>
+				<div class="button popup-close">Cancel</div>
+			</div>
+-->
+			<!--<div class="popup" id="popup-policyEntity">
+				<div class="popup-close xclose">x</div>
+				<h1>Name</h1>
+				<div class="button popup-close">Object</div>
+				<div class="button popup-close">Service</div>
+			</div>-->
+
+			<div class="popup" id="popup-addPermission">
+				<h1 id="popup-addPermission-header">Add/Edit Permission</h1>
+				<div class="popup-tabs">
+					<div id="popup-addPermission-summary-tab" class="selected">Summary</div>
+					<div id="popup-addPermission-details-tab">Details</div>
+				</div>
+
+				<div id="popup-addPermission-summary-content" class="popup-page">
+					<input type="hidden" id="popup-addPermission-id">
+					<div class="popup-input-row" id="popup-addPermission-name-container">
+						<label for="popup-addPermission-name">Name</label>
+						<input type="text" id="popup-addPermission-name">
+					</div>
+
+					<div class="popup-input-row">
+						<label for="popup-addPermission-person">Person Name</label>
+						<select id="popup-addPermission-person">	
+						</select>
+					</div>
+					<div class="popup-input-row">
+						<label for="popup-addPermission-type">Device Service</label>
+						<select id="popup-addPermission-type">
+							<!--<option value="1">GPS</option>
+							<option value="5">SMS</option>-->
+						</select>
+					</div>
+					<div class="popup-input-row">
+						<label for="popup-addPermission-action">Action</label>
+						<select id="popup-addPermission-action">
+							<option value="allow">Allow</option>
+							<option value="deny">Deny</option>
+						</select>
+					</div>
+				</div>
+
+				<div id="popup-addPermission-details-content" class="popup-page">
+					<textarea id="popup-addPermission-detailsTextarea">Details</textarea>
+				</div>
+
+				<div class="button popup-close ok" id="popup-addPermission-save">Save</div>
+				<div class="button popup-close">Cancel</div>
+			</div>
+
+<!--			<div class="popup" id="popup-deleteProfile">
+				<div class="popup-close xclose">x</div>
+				<h1>Delete environment</h1>
+				<div>Are you sure you want to delete this environment and <b>all permissions</b> associated with it?</div>
+				<div class="button popup-close ok" id="popup-deleteProfile-confirm">Delete</div>
+				<div class="button popup-close">Cancel</div>
+			</div>
+-->
+			<div class="popup" id="popup-deletePermission">
+				<div class="popup-close xclose">x</div>
+				<h1>Delete permission</h1>
+				<div>Are you sure you want to delete this permission?</div>
+				<div class="button popup-close ok" id="popup-deletePermission-confirm">Delete</div>
+				<div class="button popup-close">Cancel</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="menu_overlay"></div>
+
+	<script type="text/javascript" src="simplifiedpolicyeditor/libs/list.min.js"></script>
+	<script type="text/javascript" src="simplifiedpolicyeditor/libs/hammer.min.js"></script>
+	<script type="text/javascript" src="simplifiedpolicyeditor/main.js"></script>
+	<script type="text/javascript" src="/webinos.js"></script>
+	<script type="text/javascript" src="simplifiedpolicyeditor/simplifiedPolicyEditor.js"></script>
+	<!--/content-->
+</body>
+</html>
