@@ -471,36 +471,92 @@
             return null;
         };
 
+
+// Start point..............
+
+	function userBelongsToFriend(userId) {
+	    var friends = webinos.session.getConnectedPzh();
+
+	    for (var i in friends) {
+		if ( userId == friends[i] ) {
+		    return 1;
+		    break;
+		}
+	    }
+	    return 0;
+	}
+
+	function replaceId(subject) {
+	    var flag1 = 0, flag2 = 0;
+	    var tempSubject = [];
+	    
+	    var zoneOwner = webinos.session.getPZHId();
+	    if (!zoneOwner) {
+		zoneOwner = webinos.session.getPZPId();
+	    }
+// This function may be computational complex, but it will generate an array with possible two elements, if the conditions satisfied, one with generic url of owner another of the generic url of friends.
+	    for (var j in subject) {
+		
+		if (subject[j] == zoneOwner && flag2 == 0) {
+		    tempSubject[0] = "http://webinos.org/subject/id/PZ-Owner";
+		    flag1 = 1;
+		} else if (subject[j] == zoneOwner && flag2 == 1) {
+		    tempSubject[1] = "http://webinos.org/subject/id/PZ-Owner";
+		    flag1 = 1;
+		} else if (userBelongsToFriend(subject[j]) && flag1 == 0) {
+		    tempSubject[0] = "http://webinos.org/subject/id/known";
+		    flag2 = 1;
+		} else if (userBelongsToFriend(subject[j]) && flag1 == 1) {
+		    tempSubject[1] = "http://webinos.org/subject/id/known";
+		    flag2 = 1;
+		}
+		
+	    }
+	    
+	    return tempSubject;	    
+	}
+
+	function joinResult(res1, res2) {
+// for the elements in res1 and res2, first eliminate the duplicates, then use the concat to append the elements.	  
+	    
+	}
+	
         function getPolicySetBySubject(policySet, subject) {
-	    //Here is what need to be changed, changed to can get subject's name, to generic url. like the zoneOwner or other things
-            var res = {'generic':[], 'matched':[]};
-            
+	    var res = {'generic':[], 'matched':[]};
+            var res1 = {'generic':[], 'matched':[]};
+	    var res2 = {'generic':[], 'matched':[]};
+	    var tempSubject = [];
+
+	    // get the owner's id.
+
 	    if(policySet['policy-set']) {
                 for(var j in policySet['policy-set']) {
-		    // Still checkPolicySetSubject need to be checked!
-                    var checkRes = checkPolicySetSubject(policySet['policy-set'][j] , subject);
-		    // if can not find the subject in the policySet['policy-set'][j], add the new policyset into res['generic'] field.
-                    if (checkRes == 0){
-			
-                        res['generic'].push(new policyset(policySet['policy-set'][j], "policy-set"));
-		    // if found the subject, will add the new policyset into the res['matched'] field.
-                    } else if (checkRes == 1){
-                                res['matched'].push(new policyset(policySet['policy-set'][j], "policy-set"));
-                    }
-
-                    if (policySet['policy-set'][j]['policy-set']){
-			// if the policy-set is inside another policy-set, then this part of the function is needed.
+		    var checkRes = checkPolicySetSubject(policySet['policy-set'][j] , subject);
+		    if (checkRes == 0){
+                        res1['generic'].push(new policyset(policySet['policy-set'][j], "policy-set"));
+		    } else if (checkRes == 1){
+                        res1['matched'].push(new policyset(policySet['policy-set'][j], "policy-set"));
+		    }
+		    
+		    if (policySet['policy-set'][j]['policy-set']){
                         var tmpRes = getPolicySetBySubject(policySet['policy-set'][j], subject);
-			// e here has two options, to be generic or matched.
                         for (var e in tmpRes){
-                            if (res[e] && tmpRes[e].length > 0){
-                                res[e] = res[e].concat(tmpRes[e]);
-                            }
+			    if (res1[e] && tmpRes[e].length > 0){
+                                res1[e] = res1[e].concat(tmpRes[e]);
+			    }
                         }
-                    }
+		    }
                 }
-            }
-            return res;
+	    }
+
+	    tempSubject = replaceId(subject);
+ 
+	    res2 = getPolicySetBySubject(policySet,tempSubject);
+
+//	    // can not simply sum up the res1 and res2, need to avoid duplicate results.
+//	    res = joinResult(res1, res2);
+
+	    return res;
         }
 
         function checkPolicySetSubject(policySet, subject){
@@ -519,7 +575,6 @@
                     psSubjectMatch_i = null;
                     try {
                         psSubjectMatch_i = psSubject[i]['subject-match'][0]['$']['match'];
-                    
                     } catch (err) { continue; }
 
                     var index = subject.indexOf(psSubjectMatch_i);
