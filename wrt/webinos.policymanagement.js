@@ -547,9 +547,15 @@
                 }
 	    }
 // replace Ids in the subject, start over with the new generated tempSubject, returns the policy set of the generic URIs, then join the results.
+// Call the function twice should be ok, since the 
 	    tempSubject = replaceId(subject);
-	    res2 = getPolicySetBySubject(policySet,tempSubject);
-	    res = joinResult(res1, res2);
+	    if (tempSubject.length) {
+
+		res2 = getPolicySetBySubject(policySet,tempSubject);
+		res = joinResult(res1, res2);
+	    } else {
+		res = res1;
+	    }
 	    return res;
         }
 
@@ -632,9 +638,12 @@
             }
 
 	    tempSubject = replaceId(subject);
-	    res2 = getPolicyBySubject(policySet,tempSubject);
-	    res = joinResult(res1, res2);
-
+	    if (tempSubject.length) {
+		res2 = getPolicyBySubject(policySet,tempSubject);
+		res = joinResult(res1, res2);
+	    } else {
+		res = res1;
+	    }
             return res;
         }
 
