@@ -162,7 +162,7 @@ function showPage(linkId, type) {
 		page.style.display = "block";
 		cachedPages._currentPage = page;
 	} else {
-		console.log("Can't show this page, bad id: "+linkId);
+		console.log("Can't show this page, bad id: '"+linkId+"'");
 	}
 }
 
@@ -315,8 +315,6 @@ var enablePopups = function() {
 	domObjs.popupDeletePermission = document.getElementById('popup-deletePermission');
 
 	//buttons opening popups
-	document.getElementById('t-test').onclick = function() {showPopup(domObjs.popupTest)};
-
 	document.getElementById('peopleAddAllow').onclick = function() {permissionEditPopup('allow')};
 	document.getElementById('peopleAddDeny').onclick = function() {permissionEditPopup('deny')};
 
@@ -410,7 +408,6 @@ function SwipeableTabs(elId, containerId) {
 
 	this.setDimensions = function() {
 		if(this.initNeeded) {
-			this.container_width = this.container.offsetWidth;
 			this.tab_width = this.tabs.offsetWidth;
 			//check old limit here and adjust pos?
 			this.scroll_limit = this.container_width - this.tab_width;

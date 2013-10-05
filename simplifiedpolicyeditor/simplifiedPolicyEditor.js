@@ -18,161 +18,17 @@
  *
  ******************************************************************************/
 
-
-
-var mocked = {};
-
-mocked.quickSettings = [{
-	name: "Incognito",
-	enabled: true
-}, {
-	name: "Internet",
-	enabled: false
-}, {
-	name: "Local Discovery",
-	enabled: true
-}, {
-	name: "Location",
-	enabled: true
-}, {
-	name: "Payment",
-	enabled: false
-}, {
-	name: "People",
-	enabled: true
-}, {
-	name: "SMS & Telephony",
-	enabled: false
-}];
-
-
-mocked.quickStatus = [{
-	name: "Internet",
-	status: false
-}, {
-	name: "GPS",
-	status: true
-}];
-
-// Here we delete the people matrix but instead fo rawPeople and rawServices, after deleted the already existing services and people, it will be inserted into the people, and services matrix.
-// No, too complex, the name is used in many ways, better use another name to store the lists.
-
-mocked.people = [{
-	id: 1,
-	name: "Tardar Sauce",
-	email: "grumpy@nonexistent.com",
-}, {
-	id: 2,
-	name: "Pokey Feline",
-	email: "pokey@nonexistent.com",
-}];
-/*
-mocked.people = [];
-webinos.session.getConnectedDevices().map( function(elem) {
-    mocked['people'].push({'id':elem.id
-      , 'name':elem.friendlyName
-      , 'email':''
-    })
-});
-console.log("\n\n\n\n");
-console.log(mocked.people);
-console.log("\n\n\n\n");
-*/
-
-mocked.services = [{
-	id: 1,
-	name: 'GPS'
-}, {
-	id: 2,
-	name: 'Wifi'
-}, {
-	id: 3,
-	name: 'Photo'
-}, {
-	id: 4,
-	name: 'Video'
-}, {
-	id: 5,
-	name: 'SMS'
-}];
-
-mocked.permissions = [{
-	id: 0,
-	personId: 1,
-	name: "Navigation",
-	serviceId: 1,
-	perm: 1 //1 allow, 0 prompt, -1 deny
-}, {
-	id: 1,
-	personId: 1,
-	name: "Wifi",
-	serviceId: 2,
-	perm: 1
-}, {
-	id: 2,
-	personId: 1,
-	name: "Photos",
-	serviceId: 3,
-	perm: 1
-}, {
-	id: 3,
-	personId: 1,
-	name: "Camera",
-	serviceId: 4,
-	perm: -1
-}, {
-	id: 4,
-	personId: 1,
-	name: "SMS",
-	serviceId: 5,
-	perm: -1
-}, { //2nd person
-	id: 6,
-	personId: 2,
-	name: "GPS",
-	serviceId: 1,
-	perm: -1
-}, {
-	id: 7,
-	personId: 2,
-	name: "Wifi",
-	serviceId: 2,
-	perm: 1
-}];
-
-//mock generator
-var generateMockedData = function(arrayObjectName, quantity) {
-	var i = 0,
-		randomnumber,
-		destArr = mocked[arrayObjectName];
-
-	for(i; i<quantity; i++) {
-	        if(arrayObjectName == 'people') {
-		        destArr.push({
-				id: i+3,
-			        name: "Loremford Ipsumov "+(i+1),
-				email: "lorips"+(i+1)+"@nonexistent.com",
-			});
-		}
-	}
-}
-
-// generate more mocked data
-generateMockedData('people', 4);
-
-
-
-//-----------------------------------Functions starts here--------
-var appData = {};
-appData = mocked; //Here works for the presentation......
-
-// Trying to delete existing entries.
-appData.deletedPeople = appData.people;
-appData.deletedServices = appData.services;
-
-
+var appData = {
+    quickSettings: [],
+    quickStatus: [],
+    people: [],
+    services: [],
+    permissions: []
+};
 
 //-----------------------------------Quick Settings here----------
+
+
 function disableQuickSettingsSwitch(name) {
 	var quickSettings = appData.quickSettings,
 		i = 0,
@@ -186,8 +42,6 @@ function disableQuickSettingsSwitch(name) {
 		}
 	}
 }
-
-
 
 var drawQuickSettings = function() {
 	var quickSettingsSwitchesContainer = document.getElementById('quickSettings-switches-content'),
@@ -241,9 +95,8 @@ var drawQuickSettings = function() {
 }();
 
 
-
-
 //------------------------------------------------- DRAG & DROP here
+
 
 function handleDragStart(e) { // this / e.target is the source node.
 	this.style.opacity = '0.4';
@@ -298,8 +151,8 @@ function handleDrop(e) { // this / e.target is current target element.
 function handleDragEnd(e) { // this/e.target is the source node.
 	this.style.opacity = '1';
 	removeClass(appData.dragDestEl, 'over');
-	//console.log('drag end');
-	//console.log(this);
+//	console.log('drag end');
+//	console.log(this);
 }
 
 function dragDropInitColumns() {
@@ -313,60 +166,84 @@ function dragDropInitColumns() {
 }
 
 
+//-----------------------------draw the select and options of SERVICES---
 
 
-
-
-//-----------------------------draw the select and options of PEOPLE---
-
-var drawServices = function() {
+function fillServicesTab() {
 	var services = appData.services || [],
 		people = appData.people || [],
-		delPeople = appData.deletedPeople || [];
+        tabName = 'servicesPolicies';
 
-	appData.servicesPolicies = {};
-	domObjs.servicesPolicies = {};
-	domObjs.servicesPolicies.peopleListContainer = document.getElementById('people-list');
-	domObjs.servicesPolicies.servicesSelect = document.getElementById('services-people');
-	domObjs.servicesPolicies.allow = document.getElementById('people-allow');
-	domObjs.servicesPolicies.deny = document.getElementById('people-deny');
+	appData[tabName] = {};
+	domObjs[tabName] = {};
 
-	domObjs.servicesPolicies.people = {};
-	domObjs.servicesPolicies.permissions = {};
+	domObjs[tabName].peopleListContainer = document.getElementById('people-list');
+	domObjs[tabName].servicesSelect = document.getElementById('services-people');
+	domObjs[tabName].allow = document.getElementById('people-allow');
+	domObjs[tabName].deny = document.getElementById('people-deny');
 
-	createPeopleList(delPeople, domObjs.servicesPolicies.peopleListContainer, 'servicesPolicies');
+//    domObjs[tabName].allow.innerHTML = '';
+//    domObjs[tabName].deny.innerHTML = '';
 
-	createServicesDropdownOptions(services, domObjs.servicesPolicies.servicesSelect, 'servicesPolicies');
-	
+	domObjs[tabName].people = {};
+	domObjs[tabName].permissions = {};
+
+	createPeopleList(people, domObjs[tabName].peopleListContainer, tabName);
+
+	createServicesDropdownOptions(services, domObjs[tabName].servicesSelect, tabName);
 
 	dragDropInitColumns();
 
 	if(services.length > 0) {
-		drawDraggablePermissions('servicesPolicies');
-	}
+        showPeopleForService(appData[tabName].currentServiceId);
+    }
+}
 
+function showPeopleForService(serviceId) {
+    getPolicy_PeopleForServices(serviceId, function(people) {
+        var permissions = [];
+
+        people.map(function (person) {
+            var permission = {
+                id: person,
+                personId: person,
+                name: person,
+                serviceId: serviceId,
+                perm: 1
+            }
+            permissions.push(permission);
+        });
+        drawDraggablePermissions('servicesPolicies', permissions);
+    });
+}
+
+var drawServices = function() {
+    fillServicesTab();
 }();
 
 function createServicesDropdownOptions(services, dropdown, tab) {
 	var docFrag = document.createDocumentFragment(),
-		i = 0,
-		j = services.length,
+        activeServiceIsSet = false,
 		option;
 
-	for(i; i<j; i++) {
+    dropdown.innerHTML = '';
+
+	services.map(function (service) {
 		option = document.createElement("option");
-		option.setAttribute('value', services[i].id);
-		option.textContent = services[i].name;
+		option.setAttribute('value', service.id);
+		option.textContent = service.name;
 		docFrag.appendChild(option);
-		if( i == 0 ) {
-			setActiveService(services[i].id, tab); //init internal state		
+		if(!activeServiceIsSet) {
+			setActiveService(service.id, tab); //init internal state
+            activeServiceIsSet = true;
 		}
-	}
+	});
+
 	dropdown.appendChild(docFrag);
 	dropdown.onchange = function() {
 		var id = this.options[this.selectedIndex].value;
 		setActiveService(id);
-		drawDraggablePermissions();
+		showPeopleForService(id);
 
 	// If want to modify the people-list or the services-list, better start in this position, with draw new people/services lists.
 	}
@@ -376,18 +253,18 @@ function setActiveService(id, tab) {
 	if(!tab) {
 		var tab =domObjs.pages.tabsPolEd._currentPage.id;
 	}
+
 	appData[tab].currentServiceId = id;
 }
 
 
 function createPeopleList(people, container, tab) {
-	var i = 0,
-		j = people.length,
-		docFrag = document.createDocumentFragment();
+	var docFrag = document.createDocumentFragment();
 
-	for(i; i<j; i++) {
-		createPeopleListEntry(people[i], docFrag, tab);
-	}
+	people.map(function (person) {
+		createPeopleListEntry(person, docFrag, tab);
+	});
+
 	container.appendChild(docFrag);
 }
 
@@ -412,81 +289,104 @@ function createPeopleListEntry(people, parentElement, tab) {
 }
 
 
+//-----------------------------draw the select and options of PEOPLE---
 
 
-//-----------------------------draw the select and options of SERVICES---
-
-var drawPeople = function() {
+function fillPeopleTab() {
 	var services = appData.services || [],
-		people = appData.people || [],
-		delServices = appData.deletedServices || [];
+		people = appData.people || [];
+        tabName = 'peoplePolicies';
 
-	appData.peoplePolicies = {};
-	domObjs.peoplePolicies = {};
+	appData[tabName] = {};
+	domObjs[tabName] = {};
 
-	domObjs.peoplePolicies.servicesListContainer = document.getElementById('services-list');
-	domObjs.peoplePolicies.peopleSelect = document.getElementById('people-services');
-	domObjs.peoplePolicies.allow = document.getElementById('services-allow');
-	domObjs.peoplePolicies.deny = document.getElementById('services-deny');
+	domObjs[tabName].servicesListContainer = document.getElementById('services-list');
+	domObjs[tabName].peopleSelect = document.getElementById('people-services');
+	domObjs[tabName].allow = document.getElementById('services-allow');
+	domObjs[tabName].deny = document.getElementById('services-deny');
 
-	domObjs.peoplePolicies.services = {};
-	domObjs.peoplePolicies.permissions = {};
+//    domObjs[tabName].allow.innerHTML = '';
+//    domObjs[tabName].deny.innerHTML = '';
 
-	createServicesList(delServices, domObjs.peoplePolicies.servicesListContainer, 'peoplePolicies');
+	domObjs[tabName].services = {};
+	domObjs[tabName].permissions = {};
 
-	createPeopleDropdownOptions(people, domObjs.peoplePolicies.peopleSelect, 'peoplePolicies');
+    createServicesList(services, domObjs[tabName].servicesListContainer, tabName);
+
+	createPeopleDropdownOptions(people, domObjs[tabName].peopleSelect, tabName);
 
 	dragDropInitColumns();
 	
 	if(people.length > 0) {
-		drawDraggablePermissions('peoplePolicies');
+        showServicesForPerson(appData[tabName].currentPersonId);
 	}
+}
 
-	fillOptionsFromArray(domObjs.popupAddPermissionType, appData.services);
-	fillOptionsFromArray(domObjs.popupAddPermissionPerson, appData.people);
+function showServicesForPerson(personId){
+    getPolicy_ServicesForPeople(personId, function(services) {
+        var permissions = [];
+
+        services.map(function (service) {
+            var permission = {
+                id: service.serviceId,
+                personId: appData[tabName].currentPersonId,
+                name: service.serviceId,
+                serviceId: service.serviceId,
+                perm: service.access == "enable" ? 1 : -1
+            }
+            permissions.push(permission);
+        });
+
+        drawDraggablePermissions(tabName, permissions);
+    });
+}
+
+var drawPeople = function() {
+    fillPeopleTab();
 }();
 
 
 function createPeopleDropdownOptions(people, dropdown, tab) {
+    dropdown.innerHTML = "";
 	var docFrag = document.createDocumentFragment(),
-		i = 0,
-		j = people.length,
-		option;
+		activePersonIsSet = false,
+        option;
 
-	for(i; i<j; i++) {
+    dropdown.innerHTML = '';
+
+    people.map(function (person) {
 		option = document.createElement("option");
-		option.setAttribute('value', people[i].id);
-		option.textContent = people[i].name;
+		option.setAttribute('value', person.id);
+		option.textContent = person.name;
 		docFrag.appendChild(option);
-		if(i == 0) {
-			setActivePerson(people[i].id, tab); //initial internal state.
+		if(!activePersonIsSet) {
+			setActivePerson(person.id, tab); //initial internal state.
+            activePersonIsSet = true;
 		}
-	}
+	});
+
 	dropdown.appendChild(docFrag);
 	dropdown.onchange = function() {
 		var id = this.options[this.selectedIndex].value;
 		setActivePerson(id);
-		drawDraggablePermissions();
+		showServicesForPerson(id);
 	}
 }
 
 function setActivePerson(id, tab) {
 	if(!tab) {
-		var tab =domObjs.pages.tabsPolEd._currentPage.id;
+		var tab = domObjs.pages.tabsPolEd._currentPage.id;
 	}
 	appData[tab].currentPersonId = id;
 }
 
-
-
 function createServicesList(services, container, tab) {
-	var i = 0,
-		j = services.length,
-		docFrag = document.createDocumentFragment();
-	
-	for(i; i<j; i++) {
-		createServicesListEntry(services[i], docFrag, tab);
-	}
+    var docFrag = document.createDocumentFragment();
+
+    services.map(function(service){
+        createServicesListEntry(service, docFrag, tab);
+    });
+
 	container.appendChild(docFrag);
 }
 
@@ -494,6 +394,7 @@ function createServicesListEntry(service, parentElement, tab) {
 	if(!tab) {
 		var tab = domObjs.pages.tabsPolEd._currentPage.id;
 	}
+
 	var entry = document.createElement("div");
 	entry.setAttribute('draggable','true');
 	entry.setAttribute('style','font-weight: bold; font-size:100%');
@@ -506,75 +407,64 @@ function createServicesListEntry(service, parentElement, tab) {
 	parentElement.appendChild(entry);
 	domObjs[tab].services[service.id] = entry;
 	return entry;
-	
 }
-
-
-
-
-
 
 
 //-----------Supplimentary functions---------------
 
 
-
-function drawDraggablePermissions(tab) {
+function drawDraggablePermissions(tab, permissions) {
 	if(!tab) {
 		var tab = domObjs.pages.tabsPolEd._currentPage.id;
 	}
-	var permissions,
-		permissionId;
 
-	permissions = appData.permissions || [];
+    if(!permissions){
+        var permissions = [];
+    }
 
 	var temPersonId = appData[tab].currentPersonId,
 		temServiceId = appData[tab].currentServiceId;
+
 //	if(!tab || !temPersonId || !temServiceId) return false;
 
 	domObjs[tab].allow.innerHTML = '';
 	domObjs[tab].deny.innerHTML = '';
 
 	var docFragAllow = document.createDocumentFragment(),
-		docFragDeny = document.createDocumentFragment(),
-		i = 0,
-		j = permissions.length;
+		docFragDeny = document.createDocumentFragment();
 
 // This place still need to modify.	
 
 	if(tab == 'peoplePolicies') {
-		for(i; i<j; i++) {
-			//if(permissions[i][permissionId] == currentPermId && permissions[i].personId == personId) {
-			if(permissions[i].personId == temPersonId) {
-				if(permissions[i].perm == 1) {
+		permissions.map(function(permission) {
+			if(permission.personId == temPersonId) {
+				if(permission.perm == 1) {
 					docFrag = docFragAllow;
-				} else if(permissions[i].perm == -1) {
+				} else if(permission.perm == -1) {
 					docFrag = docFragDeny;
 				}
-				createPermissionEntry(permissions[i], docFrag, tab);
+				createPermissionEntry(permission, docFrag, tab);
 			}	
-		}
-		domObjs[tab].allow.appendChild(docFragAllow);
-		domObjs[tab].deny.appendChild(docFragDeny);
-		
+		});
 	}
 	else if(tab == 'servicesPolicies') {
-	
-		for(i; i<j; i++) {
-			//if(permissions[i][permissionId] == currentPermId && permissions[i].personId == personId) {
-			if(permissions[i].serviceId == temServiceId) {
-				if(permissions[i].perm == 1) {
+        permissions.map(function (permission) {
+			if(permission.serviceId == temServiceId) {
+				if(permission.perm == 1) {
 					docFrag = docFragAllow;
-				} else if(permissions[i].perm == -1) {
+				} else if(permission.perm == -1) {
 					docFrag = docFragDeny;
 				}
-				createPermissionEntry(permissions[i], docFrag, tab);
+				createPermissionEntry(permission, docFrag, tab);
 			}	
-		}
-		domObjs[tab].allow.appendChild(docFragAllow);
-		domObjs[tab].deny.appendChild(docFragDeny);
-	}
+		});
+    }
+    else {
+        return ;
+    }
 
+    domObjs[tab].allow.appendChild(docFragAllow);
+    domObjs[tab].deny.appendChild(docFragDeny);
 }
 
 // This function has not finished yet. This function only works with the entry, not what I need now.
@@ -589,12 +479,14 @@ function createPermissionEntry(permission, docFrag, tab) {
 	if(!tab) {
 		var tab = domObjs.pages.tabsPolEd._currentPage.id;
 	}
+
 	if(tab == 'peoplePolicies') {
-		nameHtml = '<b>'+getObjFromArrayById(permission.serviceId, appData.services).name+'</b>';
+		nameHtml = '<b>' + getObjFromArrayById(permission.serviceId, appData.services).name + '</b>';
 						
 	} else if(tab == 'servicesPolicies') {
-		nameHtml = '<b>'+getObjFromArrayById(permission.personId, appData.people).name+'</b>';
+		nameHtml = '<b>' + getObjFromArrayById(permission.personId, appData.people).name + '</b>';
 	}
+
 	entry = document.createElement("div");
 	entry.setAttribute('draggable', 'true');
 	entry.id = permission.id;
@@ -644,171 +536,31 @@ function fillOptionsFromArray(dropdown, optionsData) {
 }
 
 
+//-----------------------------------------------LOAD DATA
 
 
-// ****************Start to work!!!!!
+function loadData() {
+    webinos.session.getConnectedDevices().map( function(elem) {
+        appData.people.push({
+            id: elem.id,
+            name: elem.friendlyName,
+            email: ''
+        });
+    });
 
-
-
-function permissionEditPopup(newPermissionOrId) {
-	var tab = domObjs.pages.tabsPolEd._currentPage.id;
-
-	if(isNaN(newPermissionOrId)) { //new
-		if(newPermissionOrId == "allow" || newPermissionOrId == 'deny') {
-			domObjs.popupAddPermissionAction.value = newPermissionOrId;
-		} else {
-			domObjs.popupAddPermissionAction.options[0].selected = "selected";
-		}
-		//reset other fields
-		domObjs.popupAddPermissionId.value = '';
-		domObjs.popupAddPermissionName.value = '';
-
-		domObjs.popupAddPermissionPerson.options[0].selected = "selected";
-		domObjs.popupAddPermissionType.options[0].selected = "selected";
-	} else { //edit
-		var permission;
-
-		permission = getObjFromArrayById(newPermissionOrId, appData.permissions);
-		
-		var permValue;
-		if(permission.perm == 1) {
-			permValue = 'allow';
-		} else if(permission.perm == -1) {
-			permValue = 'deny';
-		}
-
-		domObjs.popupAddPermissionId.value = permission.id;
-		domObjs.popupAddPermissionName.value = permission.name;
-		domObjs.popupAddPermissionPerson.value = permission.personId;
-		domObjs.popupAddPermissionType.value = permission.serviceId;
-		domObjs.popupAddPermissionAction.value = permValue;
-	}
-
-
-	domObjs.popupAddPermissionNameContainer.style.display = "block";
-//	domObjs.popupAddPermissionAppContainer.style.display = "block";
-	
-
-	//TODO block here options that would collide with already set permissions
-	//this would have to be pretty dynamic = not so easy
-
-	showPopup(domObjs.popupAddPermission);
+    webinos.discovery.findServices(new ServiceType("*"), {
+        onFound: function (service) {
+            appData.services.push({
+                id: service.id,
+                name: service.displayName
+            });
+            fillPeopleTab();
+            fillServicesTab();
+        }
+    });
 }
 
-
-
-function addEditPermission() {
-	var tab = domObjs.pages.tabsPolEd._currentPage.id;
-
-	var type = domObjs.popupAddPermissionType.value;
-	var perm = domObjs.popupAddPermissionAction.value;
-//	var personId = appData[tab].currentPersonId;
-
-	var personId = domObjs.popupAddPermissionPerson.value;
-
-	var newName = domObjs.popupAddPermissionName.value;
-	if(newName == '') {
-		newName = getObjFromArrayById(type, appData.services).name;
-	}
-
-	var destColumn;
-	if(perm == 'allow') {
-		perm = 1;
-		destColumn = domObjs[tab].allow;
-	} else if(perm == 'deny') {
-		perm = -1;
-		destColumn = domObjs[tab].deny;
-	}
-
-	var id = domObjs.popupAddPermissionId.value,
-		permission;
-
-	if(!id) { //new
-		permission = {};
-		permission.id = new Date().valueOf();
-
-		permission.serviceId = type;
-		permission.perm = perm;
-		permission.personId = personId;
-
-		appData.permissions.push(permission);
-
-		//draw
-		var docFrag = document.createDocumentFragment();
-		createPermissionEntry(permission, docFrag);
-		destColumn.appendChild(docFrag);
-		drawDraggablePermissions();
-
-	} else { //edit
-
-		permission = getObjFromArrayById(id,appData.permissions);
-		if(!permission) return;
-
-		var permissionChanged = false;
-		if(permission.perm != perm) {
-			permissionChanged = true;
-		}
-
-		permission.serviceId = type;
-		permission.perm = perm;
-		permission.personId = personId;
-
-		var nameHtml;
-		if(tab == 'peoplePolicies') {
-			nameHtml = '<b>'+getObjFromArrayById(permission.serviceId, appData.services).name+'</b>';
-		} else if(tab == 'servicesPolicies') {
-			permission.name = newName;
-			nameHtml = '<b>'+getObjFromArrayById(permission.personId, appData.people).name + '</b>';
-		}
-
-		//re-draw
-		domObjs[tab].permissions[id].innerHTML = nameHtml;
-		if(permissionChanged) {
-			destColumn.appendChild(domObjs[tab].permissions[id].parentNode);
-		}
-	}
-}
-
-
-
-
-
-// **********************Start to work!!!!!!!!
-
-
-
-
-function permissionDeletePopup(id) {
-	var tab = domObjs.pages.tabsPolEd._currentPage.id;
-	appData[tab].permissionToDelete = id; //TODO meh
-	showPopup(domObjs.popupDeletePermission);
-}
-
-
-function deletePermission() {
-	var tab = domObjs.pages.tabsPolEd._currentPage.id,
-		id = appData[tab].permissionToDelete,
-		permission;
-	
-	permission = getObjFromArrayById(id, appData.permissions, true);
-	appData.permissions.splice(permission.pos,1);
-	
-	var permissionDiv = domObjs[tab].permissions[id].parentNode; //one node higher
-	permissionDiv.parentNode.removeChild(permissionDiv);
-	delete domObjs[tab].permissions[id]; //remove reference
-	appData[tab].permissionToDelete = undefined;
-}
-
-function updatePermission(id, permission) {
-	var tab = domObjs.pages.tabsPolEd._currentPage.id,
-
-	permissionObj = getObjFromArrayById(id, appData.permissions);
-
-	if(!permissionObj) return;
-	if(!isNaN(permission)) permissionObj.perm = permission;
-}
-
-
+webinos.session.addListener('registeredBrowser', loadData);
 
 
 //------------------------simplified editor functions 
@@ -1124,163 +876,3 @@ var editPolicy = function (pe, ps, userId, serviceId, access, request, res) {
 
     return ps;
 };
-
-$(document).ready(function(){
-    $("#b1").bind('click', function () {
-        var user = webinos.session.getPZPId();
-        var service = "service1";
-        getPolicy_ServiceForPeople(user, service, function(access) {
-            $('#status').html('STATUS: ');
-            $('#status').append(access + " access to " + service + " service by " + user);
-        });
-    });
-    $("#b2").bind('click', function () {
-        var user = "friend1";
-        var service = "service1";
-        getPolicy_ServiceForPeople(user, service, function(access) {
-            $('#status').html('STATUS: ');
-            $('#status').append(access + " access to " + service + " service by " + user);
-        });
-    });
-    $("#b3").bind('click', function () {
-        var user = "friend2";
-        var service = "service1";
-        getPolicy_ServiceForPeople(user, service, function(access) {
-            $('#status').html('STATUS: ');
-            $('#status').append(access + " access to " + service + " service by " + user);
-        });
-    });
-    $("#b4").bind('click', function () {
-        var user = "friend3";
-        var service = "service1";
-        getPolicy_ServiceForPeople(user, service, function(access) {
-            $('#status').html('STATUS: ');
-            $('#status').append(access + " access to " + service + " service by " + user);
-        });
-    });
-
-    $("#b5").bind('click', function () {
-        var user = webinos.session.getPZPId();
-        getPolicy_ServicesForPeople(user, function(services) {
-            console.log("services: " + JSON.stringify(services));
-            $('#status').html('STATUS: ');
-            for (var i = 0; i < services.length; i++) {
-                $('#status').append(services[i].access + " access to " + services[i].serviceId + " service by " + user + "<br />");
-            }
-        });
-    });
-    $("#b6").bind('click', function () {
-        var user = "friend1";
-        getPolicy_ServicesForPeople(user, function(services) {
-            console.log("services: " + JSON.stringify(services));
-            $('#status').html('STATUS: ');
-            for (var i = 0; i < services.length; i++) {
-                $('#status').append(services[i].access + " access to " + services[i].serviceId + " service by " + user + "<br />");
-            }
-        });
-    });
-    $("#b7").bind('click', function () {
-        var user = "friend2";
-        getPolicy_ServicesForPeople(user, function(services) {
-            console.log("services: " + JSON.stringify(services));
-            $('#status').html('STATUS: ');
-            for (var i = 0; i < services.length; i++) {
-                $('#status').append(services[i].access + " access to " + services[i].serviceId + " service by " + user + "<br />");
-            }
-        });
-    });
-    $("#b8").bind('click', function () {
-        var user = "friend3";
-        getPolicy_ServicesForPeople(user, function(services) {
-            console.log("services: " + JSON.stringify(services));
-            $('#status').html('STATUS: ');
-            for (var i = 0; i < services.length; i++) {
-                $('#status').append(services[i].access + " access to " + services[i].serviceId + " service by " + user + "<br />");
-            }
-        });
-    });
-
-    $("#b9").bind('click', function () {
-        var service = "service1";
-        getPolicy_PeopleForServices(service, function(users) {
-            $('#status').html('STATUS: ');
-            for (var i = 0; i < users.length; i++) {
-                $('#status').append("enable access to " + service + " service by " + users[i] + "<br />");
-            }
-        });
-    });
-    $("#b10").bind('click', function () {
-        var service = "service2";
-        getPolicy_PeopleForServices(service, function(users) {
-            $('#status').html('STATUS: ');
-            for (var i = 0; i < users.length; i++) {
-                $('#status').append("enable access to " + service + " service by " + users[i] + "<br />");
-            }
-        });
-    });
-    $("#b11").bind('click', function () {
-        var service = "service3";
-        getPolicy_PeopleForServices(service, function(users) {
-            $('#status').html('STATUS: ');
-            for (var i = 0; i < users.length; i++) {
-                $('#status').append("enable access to " + service + " service by " + users[i] + "<br />");
-            }
-        });
-    });
-    $("#b12").bind('click', function () {
-        var service = "service4";
-        getPolicy_PeopleForServices(service, function(users) {
-            $('#status').html('STATUS: ');
-            for (var i = 0; i < users.length; i++) {
-                $('#status').append("enable access to " + service + " service by " + users[i] + "<br />");
-            }
-        });
-    });
-
-    $("#b13").bind('click', function () {
-        var user = webinos.session.getPZPId();
-        var service = "service2";
-        var access = "enable"
-        setPolicy_ServiceForPeople(user, service, access, function(users) {
-            $('#status').html('STATUS ServiceForPeople1: ');
-            $('#status').append(access + " access to " + service + " service by " + user + "<br />");
-        });
-    });
-    $("#b14").bind('click', function () {
-        var user = webinos.session.getPZPId();
-        var service = "service1";
-        var access = "enable"
-        setPolicy_ServiceForPeople(user, service, access, function() {
-            $('#status').html('STATUS ServiceForPeople2: ');
-            $('#status').append(access + " access to " + service + " service by " + user + "<br />");
-        }, function(msg) {
-            $('#status').html('STATUS: ');
-            $('#status').append("error " + msg + "<br />");
-        });
-    });
-    $("#b15").bind('click', function () {
-        var user = "friend1";
-        var service = "service1";
-        var access = "disable"
-        setPolicy_ServiceForPeople(user, service, access, function() {
-            $('#status').html('STATUS ServiceForPeople3: ');
-            $('#status').append(access + " access to " + service + " service by " + user + "<br />");
-        }, function(msg) {
-            $('#status').html('STATUS: ');
-            $('#status').append("error " + msg + "<br />");
-        });
-    });
-    $("#b16").bind('click', function () {
-        var user = "friend3";
-        var service = "service1";
-        var access = "enable"
-        setPolicy_ServiceForPeople(user, service, access, function() {
-            $('#status').html('STATUS ServiceForPeople4: ');
-            $('#status').append(access + " access to " + service + " service by " + user + "<br />");
-        }, function(msg) {
-            $('#status').html('STATUS: ');
-            $('#status').append("error " + msg + "<br />");
-        });
-    });
-});
-

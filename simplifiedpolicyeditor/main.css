@@ -464,14 +464,12 @@ body.menu-unfolded #show-menu .notification-icon {
 
 #t-open {background-position: 3px 2px;}
 #t-save {background-position: -46px 2px;}
-#t-test {background-position: -96px 2px;}
 #t-sync {background-position: -150px 2px;}
 #t-add {background-position: -200px 2px;}
 #t-del {background-position: -254px 2px;}
 
 #t-open:hover {background-position: 3px -50px;}
 #t-save:hover {background-position: -46px -50px;}
-#t-test:hover {background-position: -96px -50px;}
 #t-sync:hover {background-position: -150px -50px;}
 #t-add:hover {background-position: -200px -50px;}
 #t-del:hover {background-position: -254px -50px;}
@@ -771,14 +769,12 @@ body.menu-unfolded #show-menu .notification-icon {
 	}
 	#t-open {background-position: 0px 4px;}
 	#t-save {background-position: -70px 4px;}
-	#t-test {background-position: -140px 4px;}
 	#t-sync {background-position: -216px 4px;}
 	#t-add {background-position: -290px 4px;}
 	#t-del {background-position: -364px 4px;}
 
 	#t-open:hover {background-position: 0px -70px;}
 	#t-save:hover {background-position: -70px -70px;}
-	#t-test:hover {background-position: -140px -70px;}
 	#t-sync:hover {background-position: -216px -70px;}
 	#t-add:hover {background-position: -290px -70px;}
 	#t-del:hover {background-position: -364px -70px;}
