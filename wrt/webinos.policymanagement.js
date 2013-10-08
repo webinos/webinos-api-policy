@@ -499,6 +499,8 @@
 
         function checkPolicySetSubject(policySet, subject){
             psSubject = null;
+	    var index = -1;
+	    var tempSubject = subject;
             try{
                 psSubject = policySet['target'][0]['subject'];
             }
@@ -506,27 +508,49 @@
                 return 0; //subject not specified (it's still a subject match)
             }
             if (psSubject){
-                var numMatchedSubjects = 0;
+//                var numMatchedSubjects = 0;
                 for (var i in psSubject) {
-                    psSubjectMatch_i = null;
+//                  psSubjectMatch_i = null;
+		    var temp = null;
                     try {
-                        psSubjectMatch_i = psSubject[i]['subject-match'][0]['$']['match'];
-
+//                        psSubjectMatch_i = psSubject[i]['subject-match'][0]['$']['match'];
+			temp = psSubject[i]['subject-match'][0]['$']['match'];
                     } catch (err) { continue; }
-                    var index = subject.indexOf(psSubjectMatch_i);
-                    if (index > -1){
-                        numMatchedSubjects++;
-                    }
+		    
+// Change the string of psSubjectMatch_i to array psSubjectMatch_i.
+		    var psSubjectMatch_i = temp.split(',');
+ 
+
+		    if(psSubjectMatch_i.length >1) {
+			for(var j in psSubjectMatch_i) {
+			    psSubjectMatch_i_j = null;
+			    try {
+				psSubjectMatch_i_j = psSubjectMatch_i[j];
+			    } catch(err) { continue; }
+			    
+			    index = tempSubject.indexOf(psSubjectMatch_i_j);
+			    if (index > -1){
+				//numMatchedSubjects++;
+				tempSubject.splice(index,1);
+			    }
+			}
+		    } else {
+			index = tempSubject.indexOf(psSubjectMatch_i);
+			if (index > -1) {
+			    tempSubject.splice(index,1);
+			}
+		    }
                 }
-                if (numMatchedSubjects == subject.length){
-                    return 1; //subject matches
+		if (tempSubject.length == 0){
+		    return 1; //subject matches
                 }
-            }
-            return -1; //subject doesn't match
+	    }
+	    return -1; //subject doesn't match
         }
 
         function getPolicyBySubject(policySet, subject) {
             var res = {'generic':[], 'matched':[]};
+	    var tempSubject = subject;
             if(policySet['policy'] && checkPolicySetSubject(policySet, subject) > -1) {
                 for(var j in policySet['policy']) {
                     pSubject = null;
@@ -537,20 +561,42 @@
                         res['generic'].push(new policy(policySet['policy'][j]));
                     }
                     if (pSubject){
-                        var numMatchedSubjects = 0;
-                        for (var i in pSubject) {
-                            pSubjectMatch_i = null;
-                            try {
-                                pSubjectMatch_i = pSubject[i]['subject-match'][0]['$']['match'];
+//                        var numMatchedSubjects = 0;
 
+                        for (var i in pSubject) {
+			    var temp = null;
+//                            pSubjectMatch_i = null;
+                            try {
+//                                pSubjectMatch_i = pSubject[i]['subject-match'][0]['$']['match'];
+				temp =pSubject[i]['subject-match'][0]['$']['match'];
                             } catch (err) { continue; }
-                            var index = subject.indexOf(pSubjectMatch_i);
-                            if (index > -1){
-                                numMatchedSubjects++;
+			    
+			    var pSubjectMatch_i = temp.split(',');
+			    if (pSubjectMatch_i.length > 1) {
+				
+				for (var j in pSubjectMatch_i) {
+				    pSubjectMatch_i_j = null;
+				    try {
+					pSubjectMatch_i_j = pSubjectMatch_i[j];
+				    } catch(err) { continue; }
+			    
+				    index = tempSubject.indexOf(pSubjectMatch_i_j);
+				    if (index > -1){
+					//numMatchedSubjects++;
+					tempSubject.splice(index,1);
+				    }
+				}
+
+			    } else {
+				var index = tempSubject.indexOf(pSubjectMatch_i);
+				if (index > -1){
+				    //                                    numMatchedSubjects++;
+				    tempSubject.splice(index,1);
+				}
                             }
-                        }
-                        if (numMatchedSubjects == subject.length){
-                                res['matched'].push(new policy(policySet['policy'][j]));
+			}
+                        if (tempSubject.length == 0){
+                            res['matched'].push(new policy(policySet['policy'][j]));
                         }
                     }
                 }
@@ -567,7 +613,7 @@
             }
             return res;
         }
-
+	
         this.removeSubject = function(subjectId, policyId) {
             if(!_ps) {
                 return null;
