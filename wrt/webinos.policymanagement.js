@@ -499,7 +499,7 @@
 
         function checkPolicySetSubject(policySet, subject) {
             psSubject = null;
-	    var tempSubject = subject;
+	    var tempSubject = JSON.parse(JSON.stringify(subject));
             try{
                 psSubject = policySet['target'][0]['subject'];
             }
@@ -546,7 +546,7 @@
 
         function getPolicyBySubject(policySet, subject) {
             var res = {'generic':[], 'matched':[]};
-	    var tempSubject = subject;
+	    var tempSubject = JSON.parse(JSON.stringify(subject));
             if(policySet['policy'] && checkPolicySetSubject(policySet, subject) > -1) {
                 for(var j in policySet['policy']) {
                     pSubject = null;
