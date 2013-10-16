@@ -817,8 +817,8 @@
         this.getPolicySet = function(policySetId){
             if(policySetId){
                 if(typeof policySetId == "object" && policySetId.length){
-                    var res = getPolicySetBySubject(_ps, policyId);
-                    var tempSubject = replaceId(policyId);
+                    var res = getPolicySetBySubject(_ps, policySetId);
+                    var tempSubject = replaceId(policySetId);
                     if ((tempSubject.indexOf("http://webinos.org/subject/id/PZ-Owner") != -1) || (tempSubject.indexOf("http://webinos.org/subject/id/known") !=-1 )) {
                         var res2 = getPolicySetBySubject(_ps, tempSubject);
                         var res = joinResult(res, res2);
