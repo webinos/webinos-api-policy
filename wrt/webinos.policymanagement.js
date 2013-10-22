@@ -512,10 +512,10 @@
                     try {
 			temp = psSubject[i]['subject-match'][0]['$']['match'];
                     } catch (err) { continue; }
-		    
+
 // Change the string of psSubjectMatch_i to array psSubjectMatch_i.
 		    var psSubjectMatch_i = temp.split(',');
-		    
+
 
 		    if(psSubjectMatch_i.length > 1) {
 			for(var j in psSubjectMatch_i) {
@@ -523,7 +523,7 @@
 			    try {
 				var psSubjectMatch_i_j = psSubjectMatch_i[j];
 			    } catch(err) { continue; }
-			    
+
 			    var index = tempSubject.indexOf(psSubjectMatch_i_j);
 			    if (index > -1){
 				//numMatchedSubjects++;
@@ -546,9 +546,10 @@
 
         function getPolicyBySubject(policySet, subject) {
             var res = {'generic':[], 'matched':[]};
-	    var tempSubject = JSON.parse(JSON.stringify(subject));
-            if(policySet['policy'] && checkPolicySetSubject(policySet, subject) > -1) {
+            // if(policySet['policy'] && checkPolicySetSubject(policySet, subject) > -1) {
+            if(policySet['policy']) {
                 for(var j in policySet['policy']) {
+                    var tempSubject = JSON.parse(JSON.stringify(subject));
                     pSubject = null;
                     try{
                         pSubject = policySet['policy'][j]['target'][0]['subject'];
@@ -557,49 +558,48 @@
                         res['generic'].push(new policy(policySet['policy'][j]));
                     }
                     if (pSubject){
-			//                        var numMatchedSubjects = 0;
-			
+                        // var numMatchedSubjects = 0;
                         for (var i in pSubject) {
-			    temp = null;
-			    //                            pSubjectMatch_i = null;
+                            temp = null;
+                            // pSubjectMatch_i = null;
                             try {
-				//                                pSubjectMatch_i = pSubject[i]['subject-match'][0]['$']['match'];
-				temp = pSubject[i]['subject-match'][0]['$']['match'];
+                                // pSubjectMatch_i = pSubject[i]['subject-match'][0]['$']['match'];
+                                temp = pSubject[i]['subject-match'][0]['$']['match'];
                             } catch (err) { continue; }
-			    
-			    var pSubjectMatch_i = temp.split(',');
-			    if (pSubjectMatch_i.length > 1) {
-				
-				for (var m in pSubjectMatch_i) {
-//				    pSubjectMatch_i_j = null;
-				    try {
-					var pSubjectMatch_i_j = pSubjectMatch_i[m];
-				    } catch(err) { continue; }
-				    
-				    var index = tempSubject.indexOf(pSubjectMatch_i_j);
-				    if (index > -1){
-					//numMatchedSubjects++;
-					tempSubject.splice(index,1);
-				    }
-				}
-				
-			    } else {
-				var index = tempSubject.indexOf(pSubjectMatch_i[0]);
-				if (index > -1){
-				    //                                    numMatchedSubjects++;
-				    tempSubject.splice(index,1);
-				}
+
+                            var pSubjectMatch_i = temp.split(',');
+                            if (pSubjectMatch_i.length > 1) {
+
+                                for (var m in pSubjectMatch_i) {
+                                    // pSubjectMatch_i_j = null;
+                                    try {
+                                        var pSubjectMatch_i_j = pSubjectMatch_i[m];
+                                    } catch(err) { continue; }
+
+                                    var index = tempSubject.indexOf(pSubjectMatch_i_j);
+                                    if (index > -1){
+                                        // numMatchedSubjects++;
+                                        tempSubject.splice(index,1);
+                                    }
+                                }
+
+                            } else {
+                                var index = tempSubject.indexOf(pSubjectMatch_i[0]);
+                                if (index > -1){
+                                    // numMatchedSubjects++;
+                                    tempSubject.splice(index,1);
+                                }
                             }
-			}
-                        if (tempSubject.length == 0){
-                            res['matched'].push(new policy(policySet['policy'][j]));
-			    break;
+                            if (tempSubject.length == 0) {
+                                res['matched'].push(new policy(policySet['policy'][j]));
+                                break;
+                            }
                         }
                     }
                 }
             }
-	    
-            if(policySet['policy-set']) {
+
+            /*if(policySet['policy-set']) {
                 for(var j in policySet['policy-set']) {
                     var tmpRes = getPolicyBySubject(policySet['policy-set'][j], subject);
                     for (var e in tmpRes){
@@ -608,10 +608,10 @@
                         }
                     }
                 }
-            }
+            }*/
             return res;
         }
-	
+
         this.removeSubject = function(subjectId, policyId) {
             if(!_ps) {
                 return null;
@@ -1079,7 +1079,7 @@
 		}
 		found_g = false;
             }
-	    
+
             for (var m in res2['matched']) {
 		for (var n in res1['matched']) {
                     if (res1['matched'][n].toJSONObject() === res2['matched'][m].toJSONObject() ) {
