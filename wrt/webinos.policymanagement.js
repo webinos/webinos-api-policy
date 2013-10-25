@@ -37,7 +37,7 @@
     }
 
 
-        var policy = function(ps, id, combine, description){
+    var policy = function(ps, id, combine, description){
 
         var _ps = ps;
         if(ps)
@@ -395,7 +395,7 @@
         };
     };
 
-    var policyset = function(ps ,type, basefile, fileId, id, combine, description){
+    var policyset = function(ps ,type, basefile, fileId, id, combine, description) {
         var _type = type;
         var _basefile = basefile;
         var _fileId = fileId;
@@ -499,7 +499,7 @@
 
         function checkPolicySetSubject(policySet, subject) {
             psSubject = null;
-	    var tempSubject = JSON.parse(JSON.stringify(subject));
+            var tempSubject = JSON.parse(JSON.stringify(subject));
             try{
                 psSubject = policySet['target'][0]['subject'];
             }
@@ -508,47 +508,48 @@
             }
             if (psSubject){
                 for (var i in psSubject) {
-		    temp = null;
+                    temp = null;
                     try {
-			temp = psSubject[i]['subject-match'][0]['$']['match'];
+                        temp = psSubject[i]['subject-match'][0]['$']['match'];
                     } catch (err) { continue; }
-		    
-// Change the string of psSubjectMatch_i to array psSubjectMatch_i.
-		    var psSubjectMatch_i = temp.split(',');
-		    
 
-		    if(psSubjectMatch_i.length > 1) {
-			for(var j in psSubjectMatch_i) {
-//			    psSubjectMatch_i_j = null;
-			    try {
-				var psSubjectMatch_i_j = psSubjectMatch_i[j];
-			    } catch(err) { continue; }
-			    
-			    var index = tempSubject.indexOf(psSubjectMatch_i_j);
-			    if (index > -1){
-				//numMatchedSubjects++;
-				tempSubject.splice(index,1);
-			    }
-			}
-		    } else {
-			var index = tempSubject.indexOf(psSubjectMatch_i[0]);
-			if (index > -1) {
-			    tempSubject.splice(index,1);
-			}
-		    }
+                    // Change the string of psSubjectMatch_i to array psSubjectMatch_i.
+                    var psSubjectMatch_i = temp.split(',');
+
+
+                    if(psSubjectMatch_i.length > 1) {
+                        for(var j in psSubjectMatch_i) {
+                            // psSubjectMatch_i_j = null;
+                            try {
+                                var psSubjectMatch_i_j = psSubjectMatch_i[j];
+                            } catch(err) { continue; }
+
+                            var index = tempSubject.indexOf(psSubjectMatch_i_j);
+                            if (index > -1){
+                                //numMatchedSubjects++;
+                                tempSubject.splice(index,1);
+                            }
+                        }
+                    } else {
+                        var index = tempSubject.indexOf(psSubjectMatch_i[0]);
+                        if (index > -1) {
+                            tempSubject.splice(index,1);
+                        }
+                    }
                 }
-		if (tempSubject.length == 0){
-		    return 1; //subject matches
+                if (tempSubject.length == 0){
+                    return 1; //subject matches
                 }
-	    }
-	    return -1; //subject doesn't match
+            }
+            return -1; //subject doesn't match
         }
 
         function getPolicyBySubject(policySet, subject) {
             var res = {'generic':[], 'matched':[]};
-	    var tempSubject = JSON.parse(JSON.stringify(subject));
-            if(policySet['policy'] && checkPolicySetSubject(policySet, subject) > -1) {
+            // if(policySet['policy'] && checkPolicySetSubject(policySet, subject) > -1) {
+            if(policySet['policy']) {
                 for(var j in policySet['policy']) {
+                    var tempSubject = JSON.parse(JSON.stringify(subject));
                     pSubject = null;
                     try{
                         pSubject = policySet['policy'][j]['target'][0]['subject'];
@@ -557,49 +558,48 @@
                         res['generic'].push(new policy(policySet['policy'][j]));
                     }
                     if (pSubject){
-			//                        var numMatchedSubjects = 0;
-			
+                        // var numMatchedSubjects = 0;
                         for (var i in pSubject) {
-			    temp = null;
-			    //                            pSubjectMatch_i = null;
+                            temp = null;
+                            // pSubjectMatch_i = null;
                             try {
-				//                                pSubjectMatch_i = pSubject[i]['subject-match'][0]['$']['match'];
-				temp = pSubject[i]['subject-match'][0]['$']['match'];
+                                // pSubjectMatch_i = pSubject[i]['subject-match'][0]['$']['match'];
+                                temp = pSubject[i]['subject-match'][0]['$']['match'];
                             } catch (err) { continue; }
-			    
-			    var pSubjectMatch_i = temp.split(',');
-			    if (pSubjectMatch_i.length > 1) {
-				
-				for (var m in pSubjectMatch_i) {
-//				    pSubjectMatch_i_j = null;
-				    try {
-					var pSubjectMatch_i_j = pSubjectMatch_i[m];
-				    } catch(err) { continue; }
-				    
-				    var index = tempSubject.indexOf(pSubjectMatch_i_j);
-				    if (index > -1){
-					//numMatchedSubjects++;
-					tempSubject.splice(index,1);
-				    }
-				}
-				
-			    } else {
-				var index = tempSubject.indexOf(pSubjectMatch_i[0]);
-				if (index > -1){
-				    //                                    numMatchedSubjects++;
-				    tempSubject.splice(index,1);
-				}
+
+                            var pSubjectMatch_i = temp.split(',');
+                            if (pSubjectMatch_i.length > 1) {
+
+                                for (var m in pSubjectMatch_i) {
+                                    // pSubjectMatch_i_j = null;
+                                    try {
+                                        var pSubjectMatch_i_j = pSubjectMatch_i[m];
+                                    } catch(err) { continue; }
+
+                                    var index = tempSubject.indexOf(pSubjectMatch_i_j);
+                                    if (index > -1){
+                                        // numMatchedSubjects++;
+                                        tempSubject.splice(index,1);
+                                    }
+                                }
+
+                            } else {
+                                var index = tempSubject.indexOf(pSubjectMatch_i[0]);
+                                if (index > -1){
+                                    // numMatchedSubjects++;
+                                    tempSubject.splice(index,1);
+                                }
                             }
-			}
-                        if (tempSubject.length == 0){
-                            res['matched'].push(new policy(policySet['policy'][j]));
-			    break;
+                            if (tempSubject.length == 0) {
+                                res['matched'].push(new policy(policySet['policy'][j]));
+                                break;
+                            }
                         }
                     }
                 }
             }
-	    
-            if(policySet['policy-set']) {
+
+            /*if(policySet['policy-set']) {
                 for(var j in policySet['policy-set']) {
                     var tmpRes = getPolicyBySubject(policySet['policy-set'][j], subject);
                     for (var e in tmpRes){
@@ -608,10 +608,10 @@
                         }
                     }
                 }
-            }
+            }*/
             return res;
         }
-	
+
         this.removeSubject = function(subjectId, policyId) {
             if(!_ps) {
                 return null;
@@ -1026,16 +1026,16 @@
 
 // Start point..............
 // This function is used to test if the userId belongs to the friends array.
-	function userBelongsToFriend(userId) {
-            if (userId !== webinos.session.getPZHId()) {
-		var friends = webinos.session.getConnectedPzh();
-		var index = friends.indexOf(userId);
-		if (index > -1){
-                    return 1;
-		}
+    function userBelongsToFriend(userId) {
+        if (userId !== webinos.session.getPZHId()) {
+            var friends = webinos.session.getConnectedPzh();
+            var index = friends.indexOf(userId);
+            if (index > -1){
+                return 1;
             }
-	    return 0;
-	}
+        }
+        return 0;
+    }
 // This function is used to replace the elements (ids) in the subject, and to  make it simple, only two possible values, one is the generic URI of zone owner, and another is the friends. Then return the changed subject (tempSubject).
     function replaceId(subject) {
         var friendFound = false;
@@ -1064,35 +1064,35 @@
     }
 
 // This function used to join two results together, res2 only can have two elements at most, one in the generic set and one in the matched set. So ckecked them one by one is the easiest solution. To avoid duplication, in both if functions, also check if the element in the res2 already presented in the res1, if already presented, skip this step, other wise push the element in res1, and return res1.
-	function joinResult(res1, res2) {
-            var found_g = false, found_m = false;
-            var res = JSON.parse(JSON.stringify(res1));
-            for (var i in res2['generic']) {
-		for (var j in res1['generic']) {
-                    if (res1['generic'][j].toJSONObject() === res2['generic'][i].toJSONObject() ) {
-			found_g = true;
-			break;
-                    }
-		}
-		if (found_g == false) {
-                    res['generic'].push(res2['generic'][i]);
-		}
-		found_g = false;
+    function joinResult(res1, res2) {
+        var found_g = false, found_m = false;
+        var res = JSON.parse(JSON.stringify(res1));
+        for (var i in res2['generic']) {
+            for (var j in res1['generic']) {
+                if (res1['generic'][j].toJSONObject() === res2['generic'][i].toJSONObject() ) {
+                    found_g = true;
+                    break;
+                }
             }
-	    
-            for (var m in res2['matched']) {
-		for (var n in res1['matched']) {
-                    if (res1['matched'][n].toJSONObject() === res2['matched'][m].toJSONObject() ) {
-			found_m = true;
-			break;
-                    }
-		}
-		if (found_m == false) {
-                    res['matched'].push(res2['matched'][m]);
-		}
-		found_m = false;
+            if (found_g == false) {
+                res['generic'].push(res2['generic'][i]);
             }
+            found_g = false;
+        }
 
-            return res;
-	}
+        for (var m in res2['matched']) {
+            for (var n in res1['matched']) {
+                if (res1['matched'][n].toJSONObject() === res2['matched'][m].toJSONObject() ) {
+                    found_m = true;
+                    break;
+                }
+            }
+            if (found_m == false) {
+                res['matched'].push(res2['matched'][m]);
+            }
+            found_m = false;
+        }
+
+        return res;
+    }
 })();
