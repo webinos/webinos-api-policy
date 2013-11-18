@@ -213,13 +213,22 @@ function showPeopleForService(serviceId) {
             }
             permissions.push(permission);
         });
+        webinos.session.getConnectedDevices().map( function(elem) {
+            if (people.indexOf(elem.id) == -1) {
+                var permission = {
+                    id: elem.id,
+                    personId: elem.id,
+                    name: elem.id,
+                    serviceId: serviceId,
+                    perm: -1
+                }
+                permissions.push(permission);
+            }
+        });
+
         drawDraggablePermissions('servicesPolicies', permissions);
     });
 }
-
-var drawServices = function() {
-    fillServicesTab();
-}();
 
 function createServicesDropdownOptions(services, dropdown, tab) {
 	var docFrag = document.createDocumentFragment(),
@@ -340,11 +349,6 @@ function showServicesForPerson(personId){
         drawDraggablePermissions(tabName, permissions);
     });
 }
-
-var drawPeople = function() {
-    fillPeopleTab();
-}();
-
 
 function createPeopleDropdownOptions(people, dropdown, tab) {
     dropdown.innerHTML = "";
