@@ -558,8 +558,21 @@ function loadData() {
         onFound: function (service) {
             appData.services.push({
                 id: service.id,
-                name: service.displayName
+                name: service.displayName + ' (service ' + service.id.substr(service.id.length - 12) + ')'
             });
+            var found = false;
+            for (var i = 0; i < appData.services.length; i++) {
+                if(appData.services[i].id === service.api) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found == false) {
+                appData.services.push({
+                    id: service.api,
+                    name: service.displayName + ' (API)'
+                });
+            }
             fillPeopleTab();
             fillServicesTab();
         }
@@ -675,26 +688,46 @@ var getPolicy_ServicesForPeople = function() {
 
                         webinos.discovery.findServices(new ServiceType("*"), {
                             onFound: function (resource) {
-                                var request = {};
-                                request.subjectInfo = {};
-                                request.subjectInfo.userId = userId;
-                                request.resourceInfo = {};
-                                if (isWebinosAPI(resource.id)) {
-                                    request.resourceInfo.apiFeature = resource.id;
-                                }
-                                else {
-                                    request.resourceInfo.serviceId = resource.id;
-                                }
+                                var serviceRequest = {};
+                                serviceRequest.subjectInfo = {};
+                                serviceRequest.subjectInfo.userId = userId;
+                                serviceRequest.resourceInfo = {};
+                                serviceRequest.resourceInfo.serviceId = resource.id;
 
                                 if (requestorId != null) {
-                                    request.deviceInfo = {};
-                                    request.deviceInfo.requestorId = requestorId;
+                                    serviceRequest.deviceInfo = {};
+                                    serviceRequest.deviceInfo.requestorId = requestorId;
                                 }
 
                                 var service = {};
                                 service.serviceId = resource.id;
                                 var newLength = result.push(service);
-                                test(ps, request, newLength - 1);
+                                test(ps, serviceRequest, newLength - 1);
+
+                                var found = false;
+                                for (var i = 0; i < result.length; i++) {
+                                    if (result[i].serviceid === resource.api) {
+                                        found = true;
+                                        break
+                                    }
+                                }
+                                if (found == false) {
+                                    var apiRequest = {};
+                                    apiRequest.subjectInfo = {};
+                                    apiRequest.subjectInfo.userId = userId;
+                                    apiRequest.resourceInfo = {};
+                                    apiRequest.resourceInfo.apiFeature = resource.api;
+
+                                    if (requestorId != null) {
+                                        apiRequest.deviceInfo = {};
+                                        apiRequest.deviceInfo.requestorId = requestorId;
+                                    }
+
+                                    var service = {};
+                                    service.serviceId = resource.api;
+                                    var newLength = result.push(service);
+                                    test(ps, apiRequest, newLength - 1);
+                                }
                             }
                         });
                     }, null);
