@@ -204,14 +204,16 @@ function showPeopleForService(serviceId) {
         var permissions = [];
 
         people.map(function (person) {
-            var permission = {
-                id: person,
-                personId: person,
-                name: person,
-                serviceId: serviceId,
-                perm: 1
+            if (person != 'anyUser') {
+                var permission = {
+                    id: person,
+                    personId: person,
+                    name: person,
+                    serviceId: serviceId,
+                    perm: 1
+                }
+                permissions.push(permission);
             }
-            permissions.push(permission);
         });
         webinos.session.getConnectedDevices().map( function(elem) {
             if (people.indexOf(elem.id) == -1) {
