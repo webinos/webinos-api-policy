@@ -581,13 +581,15 @@ function loadData() {
 
 function updatePermission(id, permission) {
     var userId = null, serviceId = null, access = null;
+    var currentPage = domObjs.pages.tabsPolEd._currentPage.id;
 
-    if (domObjs.pages.tabsPolEd._currentPage.id == 'peoplePolicies') {
-        userId = appData['peoplePolicies'].currentPersonId;
+    if (currentPage == 'peoplePolicies') {
+        userId = appData[currentPage].currentPersonId;
         serviceId = id;
-    } else if (domObjs.pages.tabsPolEd._currentPage.id == 'servicesPolicies') {
+    }
+    else if (currentPage == 'servicesPolicies') {
         userId = id;
-        serviceId = appData['servicesPolicies'].currentServiceId;
+        serviceId = appData[currentPage].currentServiceId;
     }
     if (permission == 1) {
         access = 'enable';
@@ -597,18 +599,34 @@ function updatePermission(id, permission) {
     }
     if (userId != null && serviceId != null && access != null) {
         setPolicy_ServiceForPeople(userId, serviceId, access, function(msg) {
-            if (domObjs.pages.tabsPolEd._currentPage.id == 'peoplePolicies') {
+            if (currentPage == 'peoplePolicies') {
                 if (serviceId === appData['servicesPolicies'].currentServiceId) {
                     showPeopleForService(serviceId);
                 }
-            } else if (domObjs.pages.tabsPolEd._currentPage.id == 'servicesPolicies') {
+            }
+            else if (currentPage == 'servicesPolicies') {
                 if (userId === appData['peoplePolicies'].currentPersonId) {
                     showServicesForPerson(userId);
                 }
             }
         }, function (msg) {
+            if (currentPage == 'peoplePolicies') {
+                showServicesForPerson(userId);
+            }
+            else if (currentPage == 'servicesPolicies') {
+                showPeopleForService(serviceId);
+            }
             console.log('policy editing failed: ' + msg);
         });
+    }
+    else {
+        if (currentPage == 'peoplePolicies' && userId != null) {
+            showServicesForPerson(userId);
+        }
+        else if (currentPage == 'servicesPolicies' && serviceId != null) {
+            showPeopleForService(serviceId);
+        }
+        console.log('policy editing failed');
     }
 }
 
