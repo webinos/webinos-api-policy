@@ -579,6 +579,39 @@ function loadData() {
     });
 }
 
+function updatePermission(id, permission) {
+    var userId = null, serviceId = null, access = null;
+
+    if (domObjs.pages.tabsPolEd._currentPage.id == 'peoplePolicies') {
+        userId = appData['peoplePolicies'].currentPersonId;
+        serviceId = id;
+    } else if (domObjs.pages.tabsPolEd._currentPage.id == 'servicesPolicies') {
+        userId = id;
+        serviceId = appData['servicesPolicies'].currentServiceId;
+    }
+    if (permission == 1) {
+        access = 'enable';
+    }
+    else if (permission == -1) {
+        access = 'disable';
+    }
+    if (userId != null && serviceId != null && access != null) {
+        setPolicy_ServiceForPeople(userId, serviceId, access, function(msg) {
+            if (domObjs.pages.tabsPolEd._currentPage.id == 'peoplePolicies') {
+                if (serviceId === appData['servicesPolicies'].currentServiceId) {
+                    showPeopleForService(serviceId);
+                }
+            } else if (domObjs.pages.tabsPolEd._currentPage.id == 'servicesPolicies') {
+                if (userId === appData['peoplePolicies'].currentPersonId) {
+                    showServicesForPerson(userId);
+                }
+            }
+        }, function (msg) {
+            console.log('policy editing failed: ' + msg);
+        });
+    }
+}
+
 webinos.session.addListener('registeredBrowser', loadData);
 
 
