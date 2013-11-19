@@ -1063,10 +1063,24 @@
         return tempSubject;
     }
 
+    function deepCopy(p,c) {
+        var c = c || {};
+        for (var i in p) {
+            if (typeof p[i] === 'object') {
+                c[i] = (p[i].constructor === Array) ? [] : {};
+                deepCopy(p[i], c[i]);
+            }
+            else {
+                c[i] = p[i];
+            }
+        }
+        return c;
+    }
+
 // This function used to join two results together, res2 only can have two elements at most, one in the generic set and one in the matched set. So ckecked them one by one is the easiest solution. To avoid duplication, in both if functions, also check if the element in the res2 already presented in the res1, if already presented, skip this step, other wise push the element in res1, and return res1.
     function joinResult(res1, res2) {
         var found_g = false, found_m = false;
-        var res = JSON.parse(JSON.stringify(res1));
+        var res = deepCopy(res1);
         for (var i in res2['generic']) {
             for (var j in res1['generic']) {
                 if (res1['generic'][j].toJSONObject() === res2['generic'][i].toJSONObject() ) {
