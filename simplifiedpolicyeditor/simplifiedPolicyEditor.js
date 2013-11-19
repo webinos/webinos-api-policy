@@ -579,6 +579,57 @@ function loadData() {
     });
 }
 
+function updatePermission(id, permission) {
+    var userId = null, serviceId = null, access = null;
+    var currentPage = domObjs.pages.tabsPolEd._currentPage.id;
+
+    if (currentPage == 'peoplePolicies') {
+        userId = appData[currentPage].currentPersonId;
+        serviceId = id;
+    }
+    else if (currentPage == 'servicesPolicies') {
+        userId = id;
+        serviceId = appData[currentPage].currentServiceId;
+    }
+    if (permission == 1) {
+        access = 'enable';
+    }
+    else if (permission == -1) {
+        access = 'disable';
+    }
+    if (userId != null && serviceId != null && access != null) {
+        setPolicy_ServiceForPeople(userId, serviceId, access, function(msg) {
+            if (currentPage == 'peoplePolicies') {
+                if (serviceId === appData['servicesPolicies'].currentServiceId) {
+                    showPeopleForService(serviceId);
+                }
+            }
+            else if (currentPage == 'servicesPolicies') {
+                if (userId === appData['peoplePolicies'].currentPersonId) {
+                    showServicesForPerson(userId);
+                }
+            }
+        }, function (msg) {
+            if (currentPage == 'peoplePolicies') {
+                showServicesForPerson(userId);
+            }
+            else if (currentPage == 'servicesPolicies') {
+                showPeopleForService(serviceId);
+            }
+            console.log('policy editing failed: ' + msg);
+        });
+    }
+    else {
+        if (currentPage == 'peoplePolicies' && userId != null) {
+            showServicesForPerson(userId);
+        }
+        else if (currentPage == 'servicesPolicies' && serviceId != null) {
+            showPeopleForService(serviceId);
+        }
+        console.log('policy editing failed');
+    }
+}
+
 webinos.session.addListener('registeredBrowser', loadData);
 
 
