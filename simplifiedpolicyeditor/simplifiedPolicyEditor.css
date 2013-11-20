@@ -1,0 +1,389 @@
+#tabTo-appsPolicies, #tabTo-placesPolicies {
+	display: none;
+}
+
+/* QUICK SETTINGS */
+
+#quickSettings-switches, #quickSettings-status {
+	position: relative;
+}
+
+.quickSettings-switches-title, .quickSettings-status-title {
+	color: #0084FF;
+	width: 100%;
+	border-bottom: 4px solid #EEE;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+#quickSettings-status {
+	position: relative;
+	margin-top: 2em;
+}
+.qstatus-name {
+	padding-right: 40px;
+	position: absolute;
+}
+.qstatus-icon {
+	width: 30px;
+	height: 12px;
+	margin: 0 0 0.8em auto;
+	background: #555; /* for possible future use of unknown status */
+	border: 2px solid #333;
+}
+.qstatus-icon.active {
+	background: #0084ff;
+	border: 2px solid #0064EE;
+}
+.qstatus-icon.inactive {
+	background: #555;
+	border: 2px solid #333;
+}
+
+/*@-webkit-keyframes status-icon-active-blink {
+	50% { background: #009EFF; }
+}
+.qstatus-icon.active {
+	-webkit-animation: status-icon-active-blink .4s step-end infinite alternate;
+}*/
+
+
+/* http://proto.io/freebies/onoff/ - modified & expanded */
+.onoffswitch {
+position: relative; width: 70px;
+-webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+margin-right: 0; margin-left: auto;
+}
+.onoffswitch-checkbox {
+display: none;
+}
+.onoffswitch-label {
+display: block; overflow: hidden; cursor: pointer;
+border: 1px solid #212121;
+border-radius: 5px;
+}
+.onoffswitch-inner {
+width: 200%; margin-left: -100%;
+-moz-transition: margin 0.2s ease-in 0s; -webkit-transition: margin 0.2s ease-in 0s;
+-o-transition: margin 0.2s ease-in 0s; transition: margin 0.2s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+float: left; width: 50%; height: 20px; padding: 0; line-height: 20px;
+font-size: 16px; color: white;
+-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+}
+.onoffswitch-inner:before {
+content: "ON";
+padding-left: 5px;
+background-color: #0084FF; color: #FFFFFF;
+}
+.onoffswitch-inner:after {
+content: "OFF";
+padding-right: 5px;
+background-color: #7F7F7F; color: #333333;
+text-align: right;
+}
+.onoffswitch-switch {
+width: 20px; margin: 0px;
+background: #555 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAKCAYAAABmBXS+AAAAGklEQVQYlWNgYGBgUFJS+s8ABbjYo4qopAgAGAEp12JkKTMAAAAASUVORK5CYII=') 50% 50% no-repeat;
+border: 2px solid #444;
+position: absolute; top: 0; bottom: 0; right: 46px;
+-moz-transition: all 0.2s ease-in 0s; -webkit-transition: all 0.2s ease-in 0s;
+-o-transition: all 0.2s ease-in 0s; transition: all 0.2s ease-in 0s;
+border-radius: 5px;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+right: 0px;
+}
+.onoffswitch-checkbox:disabled + .onoffswitch-label .onoffswitch-inner:after {
+background-color: #bbb; color: #888;
+}
+.onoffswitch-checkbox:disabled + .onoffswitch-label {
+cursor: default; border-color: #777;
+}
+.onoffswitch-checkbox:disabled + .onoffswitch-label .onoffswitch-switch {
+cursor: default;
+background: #aaa;
+border-color: #999;
+}
+.onoffswitch-namelabel {
+position: absolute;
+line-height: 22px;
+padding-right: 80px;
+}
+.onoffswitch-namelabel, .onoffswitch {
+margin-bottom: 0.8em;
+}
+.onoffswitch-namelabel.disabled {
+color: #bbb;
+}
+
+/* PLACES */
+
+.places-titles, .services-list, .people-list {
+	/*border-bottom: 4px solid #EEE;
+	margin-bottom: 10px;
+	padding-bottom: 10px;*/
+	overflow: hidden;
+	margin-top: 1em;
+}
+.places-allow-title, .places-deny-title, .places-prompt-title,
+.services-allow-title, .services-deny-title, .apps-prompt-title,
+.people-allow-title, .people-deny-title {
+	float: left;
+	margin-left: 1%;
+}
+
+#places-allow, #places-deny, #places-prompt,
+#services-allow, #services-deny, #apps-prompt,
+#people-allow, #people-deny {
+	height: 100%;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	float: left;
+	margin-left: 1%;
+}
+#places-profiles, .places-profiles-title,
+#services-list, .services-list-title,
+#people-list, .people-list-title {
+	width: 100%;
+}
+.places-profiles-container, .places-content,
+/*.services-list-container,*/ .services-content,
+/*.people-list-container,*/ .people-content {
+	display: inline-block;
+	vertical-align: top;
+	height: 100%;
+}
+
+/*REMOVED from UI*/
+.services-list-container, .people-list-container,
+#peopleAddAllow, #peopleAddDeny,
+#servicesAddAllow, #servicesAddDeny {
+	display: none;
+}
+
+.places-profiles-container,
+.services-list-container,
+.people-list-container {
+	width: 35%;
+	margin-right: 2%;
+	margin-left: -1px;
+	border-right: 1px solid #ccc;
+}
+.places-content,
+.services-content,
+.people-content {
+	width: 100%;
+	margin-left: -0.25em;
+	position: relative;
+}
+#places-people,
+#services-people,
+#people-services {
+	position: absolute;
+	top: 0;
+}
+.places-content-titles,
+.services-content-titles,
+.people-content-titles {
+	position: absolute;
+	top: 45px;
+	width: 100%;
+}
+#places-allow, #places-deny, #places-prompt,
+.places-allow-title, .places-deny-title, .places-prompt-title,
+#services-allow, #services-deny, #apps-prompt,
+.services-allow-title, .services-deny-title, .apps-prompt-title,
+#people-allow, #people-deny,
+.people-allow-title, .people-deny-title {
+	width: 49%;
+}
+.places-content-columns,
+.services-content-columns,
+.people-content-columns {
+	height: 100%;
+	padding-top: 85px;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+.places-profiles-title,
+.services-list-title,
+.people-list-title {
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	padding: 0.5em 0.3em;
+	color: #0084ff;
+	font-size: 130%;
+	position: relative;
+	/*font-family: 'OpenSansRegular';
+	border-bottom: 1px dashed #0084ff;*/
+}
+#places-profiles span, #places-allow span, #places-deny span, #places-prompt span,
+.places-profiles-title span, .places-allow-title span, .places-deny-title span, .places-prompt-title span,
+#services-list span, #services-allow span, #services-deny span, #apps-prompt span,
+.services-list-title span, .services-allow-title span, .services-deny-title span, .apps-prompt-title span,
+#people-list span, #people-allow span, #people-deny span, #apps-prompt span,
+.people-list-title span, .people-allow-title span, .people-deny-title span, .apps-prompt-title span 
+ {
+	display: none;
+	position: absolute;
+	z-index: 10;
+	top: 5px;
+	right: 0;
+	font-size: 30px;
+	width: 1em;
+	text-align: center;
+	cursor: pointer;
+}
+
+#places-profiles span, #places-allow span, #places-deny span, #places-prompt span,
+#services-list span, #services-allow span, #services-deny span, #apps-prompt span,
+#people-list span, #people-allow span, #people-deny span {
+	top: 0;
+	font-size: 10px;
+	width: auto;
+	border: 1px dotted #0084ff;
+	/*background: rgba(0,0,0,0.8);*/
+	background: #fff;
+}
+#places-profiles div:hover span, #places-allow div:hover span, #places-deny div:hover span, #places-prompt div:hover span,
+#services-list div:hover span, #services-allow div:hover span, #services-deny div:hover span, #apps-prompt div:hover span,
+#people-list div:hover span, #people-allow div:hover span, #people-deny div:hover span {
+	display: block;
+}
+.places-profiles-title span, .places-allow-title span, .places-deny-title span, .places-prompt-title span,
+.services-list-title span, .services-allow-title span, .services-deny-title span, .apps-prompt-title span,
+.people-list-title span, .people-allow-title span, .people-deny-title span {
+	display: block;
+	opacity: 0.2;
+}
+.places-profiles-title:hover span, .places-allow-title:hover span, .places-deny-title:hover span, .places-prompt-title:hover span,
+.services-list-title:hover span, .services-allow-title:hover span, .services-deny-title:hover span, .apps-prompt-title:hover span,
+.people-list-title:hover span, .people-allow-title:hover span, .people-deny-title:hover span {
+	opacity: 1;
+}
+#places-profiles img, #places-allow img, #places-deny img, #places-prompt img,
+#services-list img, #services-allow img, #services-deny img, #apps-prompt img,
+#people-list img, #people-allow img, #people-deny img {
+	width: 10px;
+	padding: 8px;
+}
+#places-profiles img:hover, #places-allow img:hover, #places-deny img:hover, #places-prompt img:hover,
+#services-list img:hover, #services-allow img:hover, #services-deny img:hover, #apps-prompt img:hover,
+#people-list img:hover, #people-allow img:hover, #people-deny img:hover {
+	background: #eee;
+}
+.places-allow-title, .places-deny-title, .places-prompt-title,
+.services-allow-title, .services-deny-title, .apps-prompt-title,
+.people-allow-title, .people-deny-title {
+	padding: 0.3em 0.5em 0.3em;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	position: relative;
+	height: 40px;
+}
+.places-allow-title, .services-allow-title, .people-allow-title {
+	/*color: #0f0;*/
+	background: rgba(0, 255, 0, 0.3);
+}
+.places-deny-title, .services-deny-title, .people-deny-title {
+	/*color: #f00;*/
+	background: rgba(255, 0, 0, 0.3);
+}
+.places-prompt-title, .apps-prompt-title {
+	/*color: #ff0;*/
+	background: rgba(255, 255, 0, 0.3);
+}
+#places-allow, #services-allow, #people-allow {
+	background: rgba(0, 255, 0, 0.1);
+}
+#places-deny, #services-deny, #people-deny {
+	background: rgba(255, 0, 0, 0.1);
+}
+#places-prompt, #apps-prompt {
+	background: rgba(255, 255, 0, 0.1);
+}
+#places-allow > div, #places-deny > div, #places-prompt > div,
+#services-allow > div, #services-deny > div, #apps-prompt > div,
+#people-allow > div, #people-deny > div {
+	padding: 0.5em;
+	border-left: 3px solid rgba(0,0,0,0.1);
+	border-bottom: 1px dashed rgba(0,0,0,0.1);
+	position: relative;
+	font-size: 80%;
+	cursor: move;
+}
+#places-allow div b, #places-deny div b, #places-prompt div b,
+#services-allow div b, #services-deny div b, #apps-prompt div b,
+#people-allow div b, #people-deny div b {
+	display: block;
+	font-weight: bold;
+	font-size: 150%;
+}
+#places-allow > div, #services-allow > div, #people-allow > div {
+	border-color: rgba(0, 255, 0, 0.3);
+}
+#places-deny > div, #services-deny > div, #people-deny > div {
+	border-color: rgba(255, 0, 0, 0.3);
+}
+#places-prompt > div, #apps-prompt > div {
+	border-color: rgba(255, 255, 0, 0.3);
+}
+.column.over {
+	border: 1px dotted #aaa;
+}
+
+#places-profiles > div, #services-list > div, #people-list > div {
+	padding: 0.5em;
+	cursor: pointer;
+	font-size: 90%;
+	position: relative;
+}
+#places-profiles .selected, #services-list .selected, #people-list .selected {
+	background: #555;
+	color: #fff;
+	cursor: default;
+}
+
+
+
+
+@media screen and (min-width: 1020px) {
+	#tabTo-appsPolicies, #tabTo-placesPolicies {
+		display: block;
+	}
+
+	/* QUICK SETTINGS */
+
+	#quickSettings-switches, #quickSettings-status,
+	.quickSettings-switches-title, .quickSettings-status-title {
+		display: inline-block;
+		vertical-align: top;
+	}
+	#quickSettings-switches {
+		width: 50%;
+		position: relative;
+	}
+	#quickSettings-status {
+		width: 30%;
+		margin-left: 9%;
+		padding-left: 9%;
+	}
+	#quickSettings-switches, #quickSettings-status {
+		margin-top: 0;
+	}
+
+
+	/* STORES */
+
+	#storesSettings > div:not(#foo) > input + label {
+		font-size: 140%;
+	}
+}
