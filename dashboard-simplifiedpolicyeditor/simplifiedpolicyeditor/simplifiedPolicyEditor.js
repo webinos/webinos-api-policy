@@ -21,10 +21,11 @@
 var appData = {
     quickSettings: [],
     quickStatus: [],
-    people: [],
-    services: [],
-    permissions: []
-};
+    people: {},
+    services: {},
+    permissions: {}
+},
+    timeout;
 
 //-----------------------------------Quick Settings here----------
 
@@ -44,7 +45,8 @@ function disableQuickSettingsSwitch(name) {
 }
 
 var drawQuickSettings = function() {
-	var quickSettingsSwitchesContainer = document.getElementById('quickSettings-switches-content'),
+//commented to remove quickSettings
+/*	var quickSettingsSwitchesContainer = document.getElementById('quickSettings-switches-content'),
 		quickSettingsStatusContainer = document.getElementById('quickSettings-status-content'),
 		html = '',
 		quickSettings = appData.quickSettings || [],
@@ -92,7 +94,7 @@ var drawQuickSettings = function() {
 	}
 
 	quickSettingsStatusContainer.innerHTML = html;
-}();
+*/}();
 
 
 //------------------------------------------------- DRAG & DROP here
@@ -170,8 +172,8 @@ function dragDropInitColumns() {
 
 
 function fillServicesTab() {
-	var services = appData.services || [],
-		people = appData.people || [],
+	var services = appData.services || {},
+		people = appData.people || {},
         tabName = 'servicesPolicies';
 
 	appData[tabName] = {};
@@ -194,14 +196,14 @@ function fillServicesTab() {
 
 	dragDropInitColumns();
 
-	if(services.length > 0) {
+	if(Object.keys(services).length > 0) {
         showPeopleForService(appData[tabName].currentServiceId);
     }
 }
 
 function showPeopleForService(serviceId) {
     getPolicy_PeopleForServices(serviceId, function(people) {
-        var permissions = [];
+        var permissions = {};
 
         people.map(function (person) {
             if (person != 'anyUser') {
@@ -212,7 +214,9 @@ function showPeopleForService(serviceId) {
                     serviceId: serviceId,
                     perm: 1
                 }
-                permissions.push(permission);
+                if (!permissions[person]){
+                    permissions[person] = permission;
+                }
             }
         });
         webinos.session.getConnectedDevices().map( function(elem) {
@@ -224,7 +228,9 @@ function showPeopleForService(serviceId) {
                     serviceId: serviceId,
                     perm: -1
                 }
-                permissions.push(permission);
+                if (!permissions[elem.id]) {
+                    permissions[elem.id] = permission;
+                }
             }
         });
 
@@ -239,13 +245,13 @@ function createServicesDropdownOptions(services, dropdown, tab) {
 
     dropdown.innerHTML = '';
 
-	services.map(function (service) {
+	Object.keys(services).map(function (k) {
 		option = document.createElement("option");
-		option.setAttribute('value', service.id);
-		option.textContent = service.name;
+		option.setAttribute('value', k);
+		option.textContent = services[k].name + " - " + services[k].desc;
 		docFrag.appendChild(option);
 		if(!activeServiceIsSet) {
-			setActiveService(service.id, tab); //init internal state
+			setActiveService(k, tab); //init internal state
             activeServiceIsSet = true;
 		}
 	});
@@ -272,8 +278,8 @@ function setActiveService(id, tab) {
 function createPeopleList(people, container, tab) {
 	var docFrag = document.createDocumentFragment();
 
-	people.map(function (person) {
-		createPeopleListEntry(person, docFrag, tab);
+	Object.keys(people).map(function (k) {
+		createPeopleListEntry(people[k], docFrag, tab);
 	});
 
 	container.appendChild(docFrag);
@@ -304,8 +310,8 @@ function createPeopleListEntry(people, parentElement, tab) {
 
 
 function fillPeopleTab() {
-	var services = appData.services || [],
-		people = appData.people || [];
+	var services = appData.services || {},
+		people = appData.people || {};
         tabName = 'peoplePolicies';
 
 	appData[tabName] = {};
@@ -328,14 +334,14 @@ function fillPeopleTab() {
 
 	dragDropInitColumns();
 
-	if(people.length > 0) {
+	if(Object.keys(people).length > 0) {
         showServicesForPerson(appData[tabName].currentPersonId);
 	}
 }
 
 function showServicesForPerson(personId){
     getPolicy_ServicesForPeople(personId, function(services) {
-        var permissions = [];
+        var permissions = {};
 
         services.map(function (service) {
             var permission = {
@@ -345,7 +351,9 @@ function showServicesForPerson(personId){
                 serviceId: service.serviceId,
                 perm: service.access == "enable" ? 1 : -1
             }
-            permissions.push(permission);
+            if (!permissions[service.serviceId]){
+                permissions[service.serviceId] = permission;
+            }
         });
 
         drawDraggablePermissions(tabName, permissions);
@@ -360,13 +368,13 @@ function createPeopleDropdownOptions(people, dropdown, tab) {
 
     dropdown.innerHTML = '';
 
-    people.map(function (person) {
+    Object.keys(people).map(function (k) {
 		option = document.createElement("option");
-		option.setAttribute('value', person.id);
-		option.textContent = person.name;
+		option.setAttribute('value', k);
+		option.textContent = people[k].name;
 		docFrag.appendChild(option);
 		if(!activePersonIsSet) {
-			setActivePerson(person.id, tab); //initial internal state.
+			setActivePerson(k, tab); //initial internal state.
             activePersonIsSet = true;
 		}
 	});
@@ -389,8 +397,8 @@ function setActivePerson(id, tab) {
 function createServicesList(services, container, tab) {
     var docFrag = document.createDocumentFragment();
 
-    services.map(function(service){
-        createServicesListEntry(service, docFrag, tab);
+    Object.keys(services).map(function(k){
+        createServicesListEntry(services[k], docFrag, tab);
     });
 
 	container.appendChild(docFrag);
@@ -425,7 +433,7 @@ function drawDraggablePermissions(tab, permissions) {
 	}
 
     if(!permissions){
-        var permissions = [];
+        var permissions = {};
     }
 
 	var temPersonId = appData[tab].currentPersonId,
@@ -442,26 +450,26 @@ function drawDraggablePermissions(tab, permissions) {
 // This place still need to modify.
 
 	if(tab == 'peoplePolicies') {
-		permissions.map(function(permission) {
-			if(permission.personId == temPersonId) {
-				if(permission.perm == 1) {
+		Object.keys(permissions).map(function(k) {
+			if(permissions[k].personId == temPersonId) {
+				if(permissions[k].perm == 1) {
 					docFrag = docFragAllow;
-				} else if(permission.perm == -1) {
+				} else if(permissions[k].perm == -1) {
 					docFrag = docFragDeny;
 				}
-				createPermissionEntry(permission, docFrag, tab);
+				createPermissionEntry(permissions[k], docFrag, tab);
 			}
 		});
 	}
 	else if(tab == 'servicesPolicies') {
-        permissions.map(function (permission) {
-			if(permission.serviceId == temServiceId) {
-				if(permission.perm == 1) {
+        Object.keys(permissions).map(function (k) {
+			if(permissions[k].serviceId == temServiceId) {
+				if(permissions[k].perm == 1) {
 					docFrag = docFragAllow;
-				} else if(permission.perm == -1) {
+				} else if(permissions[k].perm == -1) {
 					docFrag = docFragDeny;
 				}
-				createPermissionEntry(permission, docFrag, tab);
+				createPermissionEntry(permissions[k], docFrag, tab);
 			}
 		});
     }
@@ -487,10 +495,11 @@ function createPermissionEntry(permission, docFrag, tab) {
 	}
 
 	if(tab == 'peoplePolicies') {
-		nameHtml = '<b>' + getObjFromArrayById(permission.serviceId, appData.services).name + '</b>';
+	//	nameHtml = '<b>' + getObjFromArrayById(permission.serviceId, appData.services).name + '</b>';
+		nameHtml = '<b>' + appData.services[permission.serviceId].name + '</b><p class="desc">' + appData.services[permission.serviceId].desc + '</p>';
 
 	} else if(tab == 'servicesPolicies') {
-		nameHtml = '<b>' + getObjFromArrayById(permission.personId, appData.people).name + '</b>';
+		nameHtml = '<b>' + appData.people[permission.personId].name + '</b>';
 	}
 
 	entry = document.createElement("div");
@@ -547,34 +556,35 @@ function fillOptionsFromArray(dropdown, optionsData) {
 
 function loadData() {
     webinos.session.getConnectedDevices().map( function(elem) {
-        appData.people.push({
+        appData.people[elem.id] = {
             id: elem.id,
             name: elem.friendlyName,
             email: ''
-        });
+        };
     });
 
     webinos.discovery.findServices(new ServiceType("*"), {
         onFound: function (service) {
-            appData.services.push({
+            appData.services[service.id] = {
                 id: service.id,
-                name: service.displayName + ' (service ' + service.id.substr(service.id.length - 12) + ')'
-            });
-            var found = false;
-            for (var i = 0; i < appData.services.length; i++) {
-                if(appData.services[i].id === service.api) {
-                    found = true;
-                    break;
-                }
+                name: service.displayName,
+                desc: service.description
+            };
+
+            appData.services[service.api] = {
+                id: service.api,
+                name: service.displayName,
+                desc: 'Generic Service'
+            };
+            
+            if (timeout) {
+                clearTimeout(timeout);
             }
-            if (found == false) {
-                appData.services.push({
-                    id: service.api,
-                    name: service.displayName + ' (API)'
-                });
-            }
-            fillPeopleTab();
-            fillServicesTab();
+            timeout = setTimeout(function () { 
+                    console.log("fillTabs");
+                    fillPeopleTab(); 
+                    fillServicesTab();
+                } , 250);
         }
     });
 }
