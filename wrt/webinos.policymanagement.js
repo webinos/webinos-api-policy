@@ -16,12 +16,17 @@
  ******************************************************************************/
 (function() {
 
-    PolicyManagementModule = function (obj) {
-        this.base = WebinosService;
-        this.base(obj);
-    };
+	PolicyManagementModule = function(obj) {
+		WebinosService.call(this, obj);
+	};
+	
+	// Inherit all functions from WebinosService
+	PolicyManagementModule.prototype = Object.create(WebinosService.prototype);	
+	// The following allows the 'instanceof' to work properly
+	PolicyManagementModule.prototype.constructor = PolicyManagementModule;
+	// Register to the service discovery
+	_webinos.registerServiceConstructor("http://webinos.org/core/policymanagement", PolicyManagementModule);
 
-    PolicyManagementModule.prototype = new WebinosService;
 
     PolicyManagementModule.prototype.bindService = function (bindCB, serviceId) {
         this.policy = policy;
