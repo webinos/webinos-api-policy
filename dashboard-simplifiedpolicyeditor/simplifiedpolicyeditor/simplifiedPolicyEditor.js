@@ -494,11 +494,10 @@ function createPermissionEntry(permission, docFrag, tab) {
 		var tab = domObjs.pages.tabsPolEd._currentPage.id;
 	}
 
-	if(tab == 'peoplePolicies') {
+	if(tab == 'peoplePolicies' && appData.services[permission.serviceId]) {
 	//	nameHtml = '<b>' + getObjFromArrayById(permission.serviceId, appData.services).name + '</b>';
-		nameHtml = '<b>' + appData.services[permission.serviceId].name + '</b><p class="desc">' + appData.services[permission.serviceId].desc + '</p>';
-
-	} else if(tab == 'servicesPolicies') {
+		    nameHtml = '<b>' + appData.services[permission.serviceId].name + '</b><p class="desc">' + appData.services[permission.serviceId].desc + '</p>';
+	} else if(tab == 'servicesPolicies' && appData.people[permission.personId]) {
 		nameHtml = '<b>' + appData.people[permission.personId].name + '</b>';
 	}
 
@@ -554,7 +553,19 @@ function fillOptionsFromArray(dropdown, optionsData) {
 //-----------------------------------------------LOAD DATA
 
 
-function loadData() {
+function loadData(uri) {
+    var apiURI;
+    if(uri) {
+        apiURI = uri;
+        $("#tabTo-peoplePolicies").hide();
+        $("#tabTo-servicesPolicies").click();
+        //$("#peoplePolicies").hide();
+        //$("#tabTo-servicesPolicies").addClass("selected");
+        //$("#servicesPolicies").show();
+    } else {
+        apiURI = "*";
+    }
+    console.log("apiURI: " + apiURI);
     webinos.session.getConnectedDevices().map( function(elem) {
         appData.people[elem.id] = {
             id: elem.id,
@@ -563,7 +574,7 @@ function loadData() {
         };
     });
 
-    webinos.discovery.findServices(new ServiceType("*"), {
+    webinos.discovery.findServices(new ServiceType(apiURI), {
         onFound: function (service) {
             appData.services[service.id] = {
                 id: service.id,
@@ -640,7 +651,19 @@ function updatePermission(id, permission) {
     }
 }
 
-webinos.session.addListener('registeredBrowser', loadData);
+//webinos.session.addListener('registeredBrowser', loadData);
+
+function dashboardConfig() {
+    webinos.dashboard.getData(
+            function(tokenData){
+                loadData(tokenData.apiURI);
+            },
+            function(){
+                loadData();
+            }
+        );
+}
+webinos.session.addListener('registeredBrowser', dashboardConfig);
 
 
 //------------------------simplified editor functions
