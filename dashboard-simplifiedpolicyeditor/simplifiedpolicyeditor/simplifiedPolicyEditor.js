@@ -580,8 +580,6 @@ function loadData(uri, sid) {
 
     webinos.discovery.findServices(new ServiceType(apiURI), {
         onFound: function (service) {
-            if(service.serviceAddress.indexOf(webinos.session.getPZPId()) == -1)
-                return;
             if(sid) {
                 if(service.id.indexOf(sid) == -1) {
                     return;
@@ -598,7 +596,7 @@ function loadData(uri, sid) {
                 appData.services[service.api] = {
                     id: service.api,
                     name: name[name.length-1]+' Api',
-                    desc: 'Generic API'
+                    desc: 'Generic API feature'
                 };
             }
 
@@ -611,6 +609,10 @@ function loadData(uri, sid) {
                     fillServicesTab();
                 } , 250);
         }
+    },
+    null,
+    {
+        zoneId: [webinos.session.getPZPId()]
     });
 }
 
@@ -704,8 +706,6 @@ var getPolicy_ServiceForPeople = function() {
     }
     webinos.discovery.findServices(new ServiceType('http://webinos.org/core/policymanagement'), {
         onFound: function(service) {
-            if(service.serviceAddress.indexOf(webinos.session.getPZPId()) == -1)
-                return;
             policyeditor = service;
             policyeditor.bindService({
                 onBind: function(service) {
@@ -741,6 +741,10 @@ var getPolicy_ServiceForPeople = function() {
                 }
             });
         }
+    },
+    null,
+    {
+        zoneId: [webinos.session.getPZPId()]
     });
 };
 
@@ -787,8 +791,6 @@ var getPolicy_ServicesForPeople = function() {
 
     webinos.discovery.findServices(new ServiceType('http://webinos.org/core/policymanagement'), {
         onFound: function(service) {
-            if(service.serviceAddress.indexOf(webinos.session.getPZPId()) == -1)
-                return;
             policyeditor = service;
             policyeditor.bindService({
                 onBind: function(service) {
@@ -798,8 +800,6 @@ var getPolicy_ServicesForPeople = function() {
 
                         webinos.discovery.findServices(new ServiceType("*"), {
                             onFound: function (resource) {
-                            if(resource.serviceAddress.indexOf(webinos.session.getPZPId()) == -1)
-                                return;
                                 var serviceRequest = {};
                                 serviceRequest.subjectInfo = {};
                                 serviceRequest.subjectInfo.userId = userId;
@@ -841,11 +841,19 @@ var getPolicy_ServicesForPeople = function() {
                                     test(ps, apiRequest, newLength - 1);
                                 }
                             }
+                        },
+                        null,
+                        {
+                            zoneId: [webinos.session.getPZPId()]
                         });
                     }, null);
                 }
             });
         }
+    },
+    null,
+    {
+        zoneId: [webinos.session.getPZPId()]
     });
 };
 
@@ -880,8 +888,6 @@ var getPolicy_PeopleForServices = function() {
 
     webinos.discovery.findServices(new ServiceType('http://webinos.org/core/policymanagement'), {
         onFound: function(service) {
-            if(service.serviceAddress.indexOf(webinos.session.getPZPId()) == -1)
-                return;
             policyeditor = service;
             policyeditor.bindService({
                 onBind: function(service) {
@@ -918,6 +924,10 @@ var getPolicy_PeopleForServices = function() {
                 }
             });
         }
+    },
+    null,
+    {
+        zoneId: [webinos.session.getPZPId()]
     });
 };
 
@@ -990,8 +1000,6 @@ var setPolicy_ServiceForPeople = function() {
 
     webinos.discovery.findServices(new ServiceType('http://webinos.org/core/policymanagement'), {
         onFound: function(service) {
-            if(service.serviceAddress.indexOf(webinos.session.getPZPId()) == -1)
-                return;
             policyeditor = service;
             policyeditor.bindService({
                 onBind: function(service) {
@@ -1040,6 +1048,10 @@ var setPolicy_ServiceForPeople = function() {
                 }
             });
         }
+    },
+    null,
+    {
+        zoneId: [webinos.session.getPZPId()]
     });
 };
 
