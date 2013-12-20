@@ -576,6 +576,8 @@ function loadData(uri) {
 
     webinos.discovery.findServices(new ServiceType(apiURI), {
         onFound: function (service) {
+            if(service.serviceAddress.indexOf(webinos.session.getPZPId()) == -1)
+                return;
             appData.services[service.id] = {
                 id: service.id,
                 name: service.displayName,
@@ -585,15 +587,15 @@ function loadData(uri) {
             appData.services[service.api] = {
                 id: service.api,
                 name: service.displayName,
-                desc: 'Generic Service'
+                desc: 'Generic API'
             };
-            
+
             if (timeout) {
                 clearTimeout(timeout);
             }
-            timeout = setTimeout(function () { 
+            timeout = setTimeout(function () {
                     console.log("fillTabs");
-                    fillPeopleTab(); 
+                    fillPeopleTab();
                     fillServicesTab();
                 } , 250);
         }
@@ -776,6 +778,8 @@ var getPolicy_ServicesForPeople = function() {
 
                         webinos.discovery.findServices(new ServiceType("*"), {
                             onFound: function (resource) {
+                            if(resource.serviceAddress.indexOf(webinos.session.getPZPId()) == -1)
+                                return;
                                 var serviceRequest = {};
                                 serviceRequest.subjectInfo = {};
                                 serviceRequest.subjectInfo.userId = userId;
