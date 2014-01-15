@@ -1,5 +1,5 @@
 {
-    "name": "policymanagement"
+    "name": "webinos-api-policy"
 ,   "publishConfig": { "tag": "alpha" }
 ,   "description": "Policy Management API"
 ,   "keywords": [ "webinos", "policy", "management", "API"]
