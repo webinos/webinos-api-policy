@@ -27,6 +27,9 @@ var appData = {
 },
     timeout;
 
+//FIXME: Due to DnD not available for mobile browsers (http://caniuse.com/dragndrop) we need this switch
+var onMobileWRT = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 //-----------------------------------Quick Settings here----------
 
 
@@ -103,9 +106,14 @@ var drawQuickSettings = function() {
 function handleDragStart(e) { // this / e.target is the source node.
 	this.style.opacity = '0.4';
 	appData.dragSrcEl = this;
-	e.dataTransfer.effectAllowed = 'move';
-	e.dataTransfer.setData("text/plain", ""); //firefox needs this
-	//console.log('drag start');
+	e.dataTransfer = (e.dataTransfer)?e.dataTransfer:(e.originalEvent?e.originalEvent.dataTransfer:e.dataTransfer);
+	if(e.dataTransfer){
+		e.dataTransfer.effectAllowed = 'move';
+		e.dataTransfer.setData("text/plain", ""); //firefox needs this
+		//console.log('effect move');
+	}else{
+		//console.log('no e.dataTransfer');
+	}
 	//console.log(this);
 }
 
@@ -121,7 +129,10 @@ function handleDragOver(e) { // this / e.target is the current hover target.
 	if (e.preventDefault) {
 		e.preventDefault(); // Necessary. Allows us to drop.
 	}
-	e.dataTransfer.dropEffect = 'move';
+	e.dataTransfer = (e.dataTransfer)?e.dataTransfer:(e.originalEvent?e.originalEvent.dataTransfer:e.dataTransfer);
+	if(e.dataTransfer){
+		e.dataTransfer.dropEffect = 'move';
+	}
 	return false;
 }
 
@@ -295,8 +306,12 @@ function createPeopleListEntry(people, parentElement, tab) {
 
 	entry.textContent = people.name;
 
-	entry.addEventListener('dragstart', handleDragStart, false);
-	entry.addEventListener('dragend', handleDragEnd, false);
+	if( !onMobileWRT ) {
+		entry.addEventListener('dragstart', handleDragStart, false);
+		entry.addEventListener('dragend', handleDragEnd, false);
+	} else {
+		Hammer(entry).on("doubletap", (function(entry){ return function(){updatePermissionFromMobile(entry, people.id);}})(entry) );
+	}
 
 	parentElement.appendChild(entry);
 
@@ -414,8 +429,12 @@ function createServicesListEntry(service, parentElement, tab) {
 	entry.setAttribute('style','font-weight: bold; font-size:100%');
 	entry.textContent = service.name;
 
-	entry.addEventListener('dragstart', handleDragStart, false);
-	entry.addEventListener('dragend', handleDragEnd, false);
+	if( !onMobileWRT ) {
+		entry.addEventListener('dragstart', handleDragStart, false);
+		entry.addEventListener('dragend', handleDragEnd, false);
+	} else {
+		Hammer(entry).on("doubletap", (function(entry){ return function(){updatePermissionFromMobile(entry, service.id);}})(entry) );
+	}
 
 
 	parentElement.appendChild(entry);
@@ -428,6 +447,7 @@ function createServicesListEntry(service, parentElement, tab) {
 
 
 function drawDraggablePermissions(tab, permissions) {
+
 	if(!tab) {
 		var tab = domObjs.pages.tabsPolEd._currentPage.id;
 	}
@@ -441,8 +461,8 @@ function drawDraggablePermissions(tab, permissions) {
 
 //	if(!tab || !temPersonId || !temServiceId) return false;
 
-	domObjs[tab].allow.innerHTML = '';
-	domObjs[tab].deny.innerHTML = '';
+	domObjs[tab].allow.innerHTML = '<div class="dummy"></div>';
+	domObjs[tab].deny.innerHTML = '<div class="dummy"></div>';
 
 	var docFragAllow = document.createDocumentFragment(),
 		docFragDeny = document.createDocumentFragment();
@@ -525,8 +545,12 @@ function createPermissionEntry(permission, docFrag, tab) {
 
 	docFrag.appendChild(entry);
 
-	entry.addEventListener('dragstart', handleDragStart, false);
-	entry.addEventListener('dragend', handleDragEnd, false);
+	if( !onMobileWRT ) {
+		entry.addEventListener('dragstart', handleDragStart, false);
+		entry.addEventListener('dragend', handleDragEnd, false);
+	} else {
+		Hammer(entry).on("doubletap", (function(entry){ return function(){updatePermissionFromMobile(entry, permission.id);}})(entry) );
+	}
 
 	domObjs[tab].permissions[permission.id] = name;
 
@@ -606,12 +630,34 @@ function loadData(uri, sid) {
                 clearTimeout(timeout);
             }
             timeout = setTimeout(function () {
-                    console.log("fillTabs");
+                    //console.log("fillTabs");
                     fillPeopleTab();
                     fillServicesTab();
                 } , 250);
         }
     });
+}
+
+function updatePermissionFromMobile(entry, id) {
+	if(entry.parentElement.id.indexOf("-allow")!=-1){
+		//remove from old column
+		entry.parentElement.removeChild(entry);
+		//add to new column
+		var container = ($("#peoplePolicies").is(":visible"))?document.getElementById("services-deny"):document.getElementById("people-deny");
+		if(container) {
+			container.appendChild(entry);
+			updatePermission(id,-1);
+		}
+	} else {
+		//remove from old column
+		entry.parentElement.removeChild(entry);
+		//add to new column
+		var container = ($("#peoplePolicies").is(":visible"))?document.getElementById("services-allow"):document.getElementById("people-allow");
+		if(container) {
+			container.appendChild(entry);
+			updatePermission(id,1);
+		}
+	}
 }
 
 function updatePermission(id, permission) {
@@ -651,7 +697,7 @@ function updatePermission(id, permission) {
             else if (currentPage == 'servicesPolicies') {
                 showPeopleForService(serviceId);
             }
-            console.log('policy editing failed: ' + msg);
+            console.error('policy editing failed: ' + msg);
         });
     }
     else {
@@ -661,7 +707,7 @@ function updatePermission(id, permission) {
         else if (currentPage == 'servicesPolicies' && serviceId != null) {
             showPeopleForService(serviceId);
         }
-        console.log('policy editing failed');
+        console.error('policy editing failed');
     }
 }
 

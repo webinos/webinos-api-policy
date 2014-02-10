@@ -173,17 +173,22 @@ function enableMenuAndInitFirstPage(id, type) {
 	j = clickables.length;
 
 	for(i;i<j;i++) {
-		clickables[i].onclick = (function(elements, clickedEl, type) {
+		var clickHandler = (function(elements, clickedEl, type) {
 			return function() {
 				if(window.skipNextClick == this) { //TODO
 					window.skipNextClick = null;
 					return;
 				}
 				selectItem(elements, clickedEl);
-				showPage(this.id, type);
+				showPage(elements[clickedEl].getAttribute("id"), type);
 				hideMenu();
 			};
 		})(clickables, i, type);
+		if(clickables[i].hasOwnProperty("ontouchend")){
+			clickables[i].ontouchend = clickHandler;
+		} else {
+			clickables[i].onclick = clickHandler;
+		}
 
 		if(clickables[i].className == "selected") { //init
 			domObjs.pages = domObjs.pages || {};
